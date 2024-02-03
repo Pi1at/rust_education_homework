@@ -2,7 +2,7 @@
 
 ## Homework for Rust Developer Professional course [OTUS](https://otus.ru/lessons/rust-developer/)
 
-- [ ] Сломанный FizzBuzz [link](./homework%20tasks/1%20-%20Сломанный%20FizzBuzz.md)
+- [x] Сломанный FizzBuzz [link](./homework%20tasks/1%20-%20Сломанный%20FizzBuzz.md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-1/broken-fizzbuzz)
 - [ ] Умный дом #1 [link](./homework%20tasks/2%20-%20Умный%20дом.md)
 - [ ] Умный дом #2 [link](./homework%20tasks/3%20-%20Умный%20дом%20№2.md)
 - [ ] Делим и тестируем прототип "умного дома" [link](./homework%20tasks/4%20-%20Делим%20и%20тестируем%20прототип%20"умного%20дома".md)
