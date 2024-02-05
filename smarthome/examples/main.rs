@@ -1,6 +1,9 @@
 // разрешим пока прототип
 #![allow(dead_code)]
-use smarthome::{DeviceInfoProvider, Room, SmartHome, SmartSocket, SmartThermometer};
+use smarthome::{
+    devices::{SmartSocket, SmartThermometer},
+    DeviceInfoProvider, Room, SmartHome,
+};
 
 struct OwningDeviceInfoProvider {
     socket: SmartSocket,
