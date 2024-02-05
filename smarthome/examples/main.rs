@@ -2,7 +2,8 @@
 #![allow(dead_code)]
 use smarthome::{
     devices::{SmartSocket, SmartThermometer},
-    DeviceInfoProvider, Room, SmartHome,
+    providers::DeviceInfoProvider,
+    Room, SmartHome,
 };
 
 struct OwningDeviceInfoProvider {

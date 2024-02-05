@@ -3,8 +3,10 @@
 
 use std::{borrow::Borrow, collections::HashSet};
 
-pub mod devices;
+use providers::DeviceInfoProvider;
 
+pub mod devices;
+pub mod providers;
 // region:    --- Room
 type DeviceName = String;
 type RoomName = String;
@@ -118,9 +120,7 @@ impl SmartHome {
         report
     }
 }
-pub trait DeviceInfoProvider {
-    fn get_device_state(&self, room: &str, device: &str) -> String;
-}
+
 // endregion: --- SmartHouse
 
 #[cfg(test)]
