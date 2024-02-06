@@ -18,7 +18,13 @@
         pkgs = import nixpkgs { inherit system overlays; };
         rustToolchain =
           pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-        nativeBuildInputs = with pkgs; [ dioxus-cli rustToolchain pkg-config ];
+        nativeBuildInputs = with pkgs; [
+          just
+          cargo-llvm-cov
+          cargo-watch
+          rustToolchain
+          pkg-config
+        ];
         buildInputs = with pkgs; [ ];
       in
       {

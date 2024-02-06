@@ -27,5 +27,5 @@ Cargo.lock
 # direnv cache
 .direnv
 
-# lets ignore flake.lock for now
-flake.lock
+# test coverage dir
+coverage/

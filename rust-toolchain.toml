@@ -1,4 +1,13 @@
 [toolchain]
-channel    = "stable"
-components = ["rust-src", "rustc-dev", "rustfmt"]
-profile    = "default"
+channel = "stable"
+components = [
+    "cargo",
+    "clippy",
+    "llvm-tools-preview",
+    "rust-src",
+    "rust-std",
+    #"rustc",
+    "rustc-dev",
+    "rustfmt",
+]
+profile = "default"
