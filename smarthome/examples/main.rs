@@ -1,7 +1,7 @@
 // разрешим пока прототип
 #![allow(dead_code)]
 use smarthome::{
-    devices::{SmartSocket, SmartThermometer},
+    devices::{socket::SmartSocket, thermometer::SmartThermometer},
     location::{Room, SmartHome},
     providers::DeviceInfoProvider,
 };
