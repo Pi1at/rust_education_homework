@@ -6,15 +6,18 @@ pub struct SmartThermometer {
 }
 
 impl SmartThermometer {
+    #[must_use]
     pub const fn new(name: String) -> Self {
         Self { name }
     }
 
+    #[must_use]
     pub const fn get_temperature(&self) -> Tempreature {
         // TODO
         10.0
     }
 }
+
 // region:    --- Tests
 
 #[cfg(test)]

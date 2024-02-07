@@ -13,11 +13,13 @@ pub struct SmartSocket {
 }
 
 impl SmartSocket {
+    #[must_use]
     pub const fn new(name: String) -> Self {
         let state = SmartSocketState::Off;
         Self { name, state }
     }
 
+    #[must_use]
     pub fn description(&self) -> &str {
         &self.name
     }
@@ -30,6 +32,7 @@ impl SmartSocket {
         self.state = SmartSocketState::Off;
     }
 
+    #[must_use]
     pub const fn get_current_power_usage(&self) -> Watt {
         match self.state {
             SmartSocketState::On => 1242,

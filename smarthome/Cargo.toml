@@ -22,4 +22,3 @@ suspicious  = "warn"
 
 cast_possible_truncation    = "warn"
 empty_structs_with_brackets = "warn"
-must_use_candidate          = "allow"
