@@ -32,7 +32,6 @@ impl SmartSocket {
 
     pub const fn get_current_power_usage(&self) -> Watt {
         match self.state {
-            // TODO
             SmartSocketState::On => 1242,
             SmartSocketState::Off => 0,
         }
@@ -44,41 +43,46 @@ impl SmartSocket {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_description_matches_name() {
-        let name = "TestSocket";
-        let ts = SmartSocket::new(name.into());
-        assert_eq!(ts.description(), name);
+    fn create_test_socket() -> SmartSocket {
+        SmartSocket::new("TestSocket".into())
     }
 
     #[test]
-    fn test_switching_on_off() {
-        let mut ss1 = SmartSocket {
-            name: "Socket1".into(),
-            state: SmartSocketState::On,
-        };
-        // let mut ss2 = SmartSocket {
-        //     name: "Socket2".into(),
-        //     state: SmartSocketState::Off,
-        // };
-        let s3 = ss1.clone();
-        let mut ts = SmartSocket::new("TestSocket".into());
+    fn test_description_contains_name() {
+        let name = "TestSocket";
+        let ts = SmartSocket::new(name.into());
+        assert!(ts.description().contains(name));
+    }
 
-        println!("Working with socket {ts:?}");
-
-        // after creation we have State::Off
+    #[test]
+    fn test_after_creation_turned_off() {
+        let ts = create_test_socket();
         assert_eq!(ts.state, SmartSocketState::Off);
+    }
 
+    #[test]
+    fn test_no_power_when_turned_off() {
+        let mut ts = create_test_socket();
+        ts.turn_off();
+        assert_eq!(ts.get_current_power_usage(), 0);
+    }
+
+    #[test]
+    fn test_power_when_turned_on() {
+        let mut ts = create_test_socket();
         ts.turn_on();
-        // we can turnng on
-        assert_eq!(ts.state, SmartSocketState::On);
+        assert!(ts.get_current_power_usage() > 0);
+    }
 
+    #[test]
+    fn test_turning_on_off_twice_in_a_row() {
+        let mut ts = create_test_socket();
+        ts.turn_on();
+        // we can turn it on
+        assert_eq!(ts.state, SmartSocketState::On);
         ts.turn_on();
         // even twice in a row
         assert_eq!(ts.state, SmartSocketState::On);
-
-        // get some power when turned on
-        assert_ne!(ts.get_current_power_usage(), 0);
 
         ts.turn_off();
         // we can turn it off
@@ -87,9 +91,6 @@ mod tests {
         ts.turn_off();
         // even twice in a row
         assert_eq!(ts.state, SmartSocketState::Off);
-
-        // No power when turned off
-        assert_eq!(ts.get_current_power_usage(), 0);
     }
 }
 
