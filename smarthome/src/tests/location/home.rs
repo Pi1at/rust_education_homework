@@ -4,14 +4,14 @@ use crate::providers::DeviceInfoProvider;
 
 #[test]
 fn test_new_smart_home() {
-    let home = SmartHome::new("My Home");
+    let home = SmartHome::new("My Home".into());
     assert_eq!(home.name, "My Home");
     assert_eq!(home.rooms.len(), 0);
 }
 
 #[test]
 fn test_add_room() {
-    let mut home = SmartHome::new("My Home");
+    let mut home = SmartHome::new("My Home".into());
     let room1 = Room::new("Living Room".into());
     let room2 = Room::new("Bedroom".into());
 
@@ -35,7 +35,7 @@ fn test_with_room() {
     let room1 = Room::new("Living Room".into());
     let room2 = Room::new("Bedroom".into());
 
-    let home = SmartHome::new("My Home")
+    let home = SmartHome::new("My Home".into())
         .with_room(room1.clone())
         .with_room(room2.clone());
 
@@ -58,7 +58,7 @@ fn test_with_rooms() {
 
     let new_rooms = vec![room2.clone(), room3.clone()];
 
-    let home = SmartHome::new("My Home")
+    let home = SmartHome::new("My Home".into())
         .with_rooms(new_rooms.into_iter())
         .with_room(room1.clone());
 
@@ -79,7 +79,7 @@ fn test_get_rooms() {
     let room1 = Room::new("Living Room".into());
     let room2 = Room::new("Bedroom".into());
 
-    let home = SmartHome::new("My Home")
+    let home = SmartHome::new("My Home".into())
         .with_room(room1.clone())
         .with_room(room2.clone());
 
@@ -98,7 +98,7 @@ fn test_get_devices_in_room() {
         .with_device(device1.name.clone())
         .with_device(device2.name.clone());
 
-    let home = SmartHome::new("My Home").with_room(room);
+    let home = SmartHome::new("My Home".into()).with_room(room);
 
     let returned_devices = home.get_devices_in_room("Living Room");
     assert_eq!(returned_devices.len(), 2);
@@ -134,7 +134,9 @@ fn test_create_report() {
 
     let room2 = Room::new("Bedroom".into()).with_device(device2.name.clone());
 
-    let home = SmartHome::new("My Home").with_room(room1).with_room(room2);
+    let home = SmartHome::new("My Home".into())
+        .with_room(room1)
+        .with_room(room2);
 
     let info_provider = MockDeviceInfoProvider { device1, device2 };
     let report = home.create_report(&info_provider);

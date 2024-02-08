@@ -15,9 +15,9 @@ pub struct SmartHome {
 
 impl SmartHome {
     #[must_use]
-    pub fn new(name: &str) -> Self {
+    pub fn new(name: String) -> Self {
         Self {
-            name: name.into(),
+            name,
             rooms: HashSet::new(),
         }
     }

@@ -54,7 +54,7 @@ fn main() {
     let outdoor = Room::new("Outdoor".into())
         .with_devices([socket2.name.clone(), thermo.name.clone()].into_iter());
     // Инициализация дома
-    let house = SmartHome::new("House").with_rooms([kitchen, outdoor].into_iter());
+    let house = SmartHome::new("House".into()).with_rooms([kitchen, outdoor].into_iter());
 
     // Строим отчёт с использованием `OwningDeviceInfoProvider`.
     let mut info_provider_1 = OwningDeviceInfoProvider { socket: socket1 };
