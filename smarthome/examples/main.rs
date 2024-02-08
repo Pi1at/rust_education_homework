@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 use smarthome::{
     devices::{socket::SmartSocket, thermometer::SmartThermometer},
-    location::{home::SmartHome, room::Room},
+    location::{home::SmartHome, room::Room, DeviceName, RoomName},
     providers::DeviceInfoProvider,
 };
 
@@ -11,8 +11,8 @@ struct OwningDeviceInfoProvider {
 }
 
 impl DeviceInfoProvider for OwningDeviceInfoProvider {
-    fn get_device_state(&self, _room: &str, device: &str) -> String {
-        if self.socket.name == device {
+    fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
+        if self.socket.name == *device {
             format!(
                 "{} power: {} W",
                 device,
@@ -30,14 +30,14 @@ struct BorrowingDeviceInfoProvider<'a, 'b> {
 }
 
 impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
-    fn get_device_state(&self, _room: &str, device: &str) -> String {
-        if self.socket.name == device {
+    fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
+        if self.socket.name == *device {
             format!(
                 "{} power: {} W",
                 device,
                 self.socket.get_current_power_usage()
             )
-        } else if self.thermo.name == device {
+        } else if self.thermo.name == *device {
             format!("{} {} °C", device, self.thermo.get_temperature())
         } else {
             format!("ERROR: Device {device} not found")
