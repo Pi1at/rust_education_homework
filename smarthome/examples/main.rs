@@ -13,15 +13,19 @@ struct OwningDeviceInfoProvider {
 impl DeviceInfoProvider for OwningDeviceInfoProvider {
     type DeviceName = location::DeviceName;
     type RoomName = location::RoomName;
-    fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
+    fn get_device_state(
+        &self,
+        _room: &RoomName,
+        device: &DeviceName,
+    ) -> Result<String, &'static str> {
         if self.socket.name == *device {
-            format!(
+            Ok(format!(
                 "{} power: {} W",
                 device,
                 self.socket.get_current_power_usage()
-            )
+            ))
         } else {
-            format!("ERROR: Device {device} not found")
+            Err("Device not found")
         }
     }
 }
@@ -34,17 +38,21 @@ struct BorrowingDeviceInfoProvider<'a, 'b> {
 impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
     type DeviceName = location::DeviceName;
     type RoomName = location::RoomName;
-    fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
+    fn get_device_state(
+        &self,
+        _room: &RoomName,
+        device: &DeviceName,
+    ) -> Result<String, &'static str> {
         if self.socket.name == *device {
-            format!(
+            Ok(format!(
                 "{} power: {} W",
                 device,
                 self.socket.get_current_power_usage()
-            )
+            ))
         } else if self.thermo.name == *device {
-            format!("{} {} °C", device, self.thermo.get_temperature())
+            Ok(format!("{} {} °C", device, self.thermo.get_temperature()))
         } else {
-            format!("ERROR: Device {device} not found")
+            Err("Device not found")
         }
     }
 }

@@ -58,11 +58,10 @@ impl SmartHome {
         for room in &self.rooms {
             report.push_str(&format!("Room: {}\n", room.name));
             for device in &room.devices {
-                let state = info_provider.get_device_state(&room.name, device);
-                if !state.to_uppercase().contains("ERROR") {
+                if let Ok(state) = info_provider.get_device_state(&room.name, device) {
                     let device_line = format!("Device: {device}\n{state}\n");
                     report.push_str(&device_line);
-                }
+                };
             }
         }
         report

@@ -121,13 +121,17 @@ fn test_create_report() {
     impl DeviceInfoProvider for MockDeviceInfoProvider {
         type DeviceName = location::DeviceName;
         type RoomName = location::RoomName;
-        fn get_device_state(&self, room: &RoomName, device: &DeviceName) -> String {
+        fn get_device_state(
+            &self,
+            room: &RoomName,
+            device: &DeviceName,
+        ) -> Result<String, &'static str> {
             if room == "Living Room" && device == self.device1.description() {
-                "Device 1 is on".to_string()
+                Ok("Device 1 is on".to_string())
             } else if room == "Bedroom" && device == &self.device2.name {
-                "Device 2 is off".to_string()
+                Ok("Device 2 is off".to_string())
             } else {
-                "ERROR: Device state not available".to_string()
+                Err("Device state not available")
             }
         }
     }
