@@ -1,4 +1,7 @@
-use crate::devices::socket::{SmartSocket, SmartSocketState};
+use crate::devices::{
+    socket::{SmartSocket, SmartSocketState},
+    Construct,
+};
 
 fn create_test_socket() -> SmartSocket {
     SmartSocket::new("TestSocket".into())

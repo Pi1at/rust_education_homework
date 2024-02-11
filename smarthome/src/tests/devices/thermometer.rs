@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 
 use crate::devices::thermometer::SmartThermometer;
+use crate::devices::Construct;
 
 fn create_test_thermometer() -> SmartThermometer {
     SmartThermometer::new("TestThermo".into())

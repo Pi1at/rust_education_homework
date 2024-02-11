@@ -1,3 +1,4 @@
+use crate::devices::Construct;
 use crate::devices::{socket::SmartSocket, thermometer::SmartThermometer};
 use crate::location::{home::SmartHome, room::Room};
 use crate::location::{DeviceName, RoomName};

@@ -1,21 +1,31 @@
 use crate::location::DeviceName;
 
-type Tempreature = f32;
+pub use super::Construct;
+use super::Gauge;
+
+type Temperature = f32;
 
 #[derive(Clone, Debug)]
 pub struct SmartThermometer {
     pub name: DeviceName,
 }
 
-impl SmartThermometer {
+impl Construct for SmartThermometer {
     #[must_use]
-    pub const fn new(name: DeviceName) -> Self {
+    fn new(name: DeviceName) -> Self {
         Self { name }
     }
-
+}
+impl Gauge<Temperature> for SmartThermometer {
     #[must_use]
-    pub const fn get_temperature(&self) -> Tempreature {
-        // TODO
+    fn get_measure(&self) -> Temperature {
         10.0
+    }
+}
+
+impl SmartThermometer {
+    #[must_use]
+    pub fn get_temperature(&self) -> Temperature {
+        self.get_measure()
     }
 }
