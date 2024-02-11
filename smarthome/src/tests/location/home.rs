@@ -1,7 +1,7 @@
 use crate::devices::Construct;
 use crate::devices::{socket::SmartSocket, thermometer::SmartThermometer};
+use crate::location::{self, DeviceName, RoomName};
 use crate::location::{home::SmartHome, room::Room};
-use crate::location::{DeviceName, RoomName};
 use crate::providers::DeviceInfoProvider;
 
 #[test]
@@ -119,6 +119,8 @@ fn test_create_report() {
     }
 
     impl DeviceInfoProvider for MockDeviceInfoProvider {
+        type DeviceName = location::DeviceName;
+        type RoomName = location::RoomName;
         fn get_device_state(&self, room: &RoomName, device: &DeviceName) -> String {
             if room == "Living Room" && device == self.device1.description() {
                 "Device 1 is on".to_string()

@@ -1,5 +1,5 @@
-use crate::location::{DeviceName, RoomName};
-
 pub trait DeviceInfoProvider {
-    fn get_device_state(&self, room: &RoomName, device: &DeviceName) -> String;
+    type DeviceName;
+    type RoomName;
+    fn get_device_state(&self, room: &Self::RoomName, device: &Self::DeviceName) -> String;
 }

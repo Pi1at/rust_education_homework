@@ -50,7 +50,10 @@ impl SmartHome {
             .map_or_else(Vec::new, |r| r.devices.iter().cloned().collect())
     }
     // Библиотека имеет функцию, возвращающую текстовый отчёт о состоянии дома
-    pub fn create_report<T: DeviceInfoProvider>(&self, info_provider: &T) -> String {
+    pub fn create_report<T>(&self, info_provider: &T) -> String
+    where
+        T: DeviceInfoProvider<RoomName = RoomName, DeviceName = DeviceName>,
+    {
         let mut report = String::new();
         for room in &self.rooms {
             report.push_str(&format!("Room: {}\n", room.name));

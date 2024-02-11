@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 use smarthome::{
     devices::{socket::SmartSocket, thermometer::SmartThermometer, Construct},
-    location::{home::SmartHome, room::Room, DeviceName, RoomName},
+    location::{self, home::SmartHome, room::Room, DeviceName, RoomName},
     providers::DeviceInfoProvider,
 };
 
@@ -11,6 +11,8 @@ struct OwningDeviceInfoProvider {
 }
 
 impl DeviceInfoProvider for OwningDeviceInfoProvider {
+    type DeviceName = location::DeviceName;
+    type RoomName = location::RoomName;
     fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
         if self.socket.name == *device {
             format!(
@@ -30,6 +32,8 @@ struct BorrowingDeviceInfoProvider<'a, 'b> {
 }
 
 impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
+    type DeviceName = location::DeviceName;
+    type RoomName = location::RoomName;
     fn get_device_state(&self, _room: &RoomName, device: &DeviceName) -> String {
         if self.socket.name == *device {
             format!(
