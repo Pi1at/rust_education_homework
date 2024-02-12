@@ -4,8 +4,11 @@ use super::room::DeviceLocation;
 use super::room::Room;
 
 pub trait LocationSchema {
+    /// Represents a location for devices, including the location name and devices names.
     type R: DeviceLocation<LocationName = Self::L, DeviceName = Self::D>;
+    /// Represents the location name.
     type L;
+    /// Represents the device name.
     type D;
     //type DeviceName = DeviceLocation::DeviceName;
     #[must_use]
@@ -39,6 +42,7 @@ pub struct SmartHome {
 }
 
 impl SmartHome {
+    /// finds room by location name
     fn try_find_room_mut(&mut self, r: &Room) -> Option<&mut Room> {
         self.rooms
             .iter_mut()
