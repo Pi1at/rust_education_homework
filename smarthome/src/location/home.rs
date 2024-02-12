@@ -18,6 +18,8 @@ pub trait LocationSchema {
 
     /// room with equal name will be replaced by new one
     fn add_room(&mut self, room: Self::R);
+    /// delete room
+    fn delete_room(&mut self, room: Self::R);
 
     // Библиотека позволяет запросить список помещений в доме.
     #[must_use]
@@ -118,5 +120,10 @@ impl LocationSchema for SmartHome {
 
     fn get_name(&self) -> &str {
         self.name.as_str()
+    }
+
+    fn delete_room(&mut self, room: Self::R) {
+        let room_name = room.get_location_name();
+        self.rooms.retain(|r| r.get_location_name() != room_name);
     }
 }

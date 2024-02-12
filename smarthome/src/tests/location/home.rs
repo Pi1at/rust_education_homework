@@ -177,12 +177,12 @@ fn test_delete_room_positive() {
     hotel.add_room(room1.clone());
     hotel.add_room(room2);
 
-    assert_eq!(hotel.get_room_names().len(), 2);
+    assert_eq!(hotel.get_rooms_names().len(), 2);
 
     hotel.delete_room(room1);
 
-    assert_eq!(hotel.get_room_names().len(), 1);
-    assert_eq!(hotel.get_room_names()[0], "Room 2");
+    assert_eq!(hotel.get_rooms_names().len(), 1);
+    assert_eq!(hotel.get_rooms_names()[0], "Room 2");
 }
 
 #[test]
@@ -193,15 +193,15 @@ fn test_delete_room_negative() {
     hotel.add_room(room1.clone());
     hotel.add_room(room2);
 
-    assert_eq!(hotel.get_room_names().len(), 2);
+    assert_eq!(hotel.get_rooms_names().len(), 2);
 
     hotel.delete_room(room1.clone());
 
-    assert_eq!(hotel.get_room_names().len(), 1);
-    assert_eq!(hotel.get_room_names()[0], "Room 2");
+    assert_eq!(hotel.get_rooms_names().len(), 1);
+    assert_eq!(hotel.get_rooms_names()[0], "Room 2");
 
     hotel.delete_room(room1);
 
-    assert_eq!(hotel.get_room_names().len(), 1);
-    assert_eq!(hotel.get_room_names()[0], "Room 2");
+    assert_eq!(hotel.get_rooms_names().len(), 1);
+    assert_eq!(hotel.get_rooms_names()[0], "Room 2");
 }
