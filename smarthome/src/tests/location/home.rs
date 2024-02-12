@@ -1,5 +1,7 @@
 use crate::devices::Construct;
 use crate::devices::{socket::SmartSocket, thermometer::SmartThermometer};
+use crate::location::home::LocationSchema;
+use crate::location::room::DeviceLocation;
 use crate::location::{self, DeviceName, RoomName};
 use crate::location::{home::SmartHome, room::Room};
 use crate::providers::DeviceInfoProvider;
@@ -7,8 +9,8 @@ use crate::providers::DeviceInfoProvider;
 #[test]
 fn test_new_smart_home() {
     let home = SmartHome::new("My Home".into());
-    assert_eq!(home.name, "My Home");
-    assert_eq!(home.rooms.len(), 0);
+    assert_eq!(home.get_name(), "My Home");
+    assert_eq!(home.get_rooms().len(), 0);
 }
 
 #[test]
@@ -18,18 +20,21 @@ fn test_add_room() {
     let room2 = Room::new("Bedroom".into());
 
     home.add_room(room1.clone());
-    assert_eq!(home.rooms.len(), 1);
-    assert!(home.rooms.contains(&room1));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 1);
+    assert!(rooms.contains(room1.get_location_name()));
 
     home.add_room(room2.clone());
-    assert_eq!(home.rooms.len(), 2);
-    assert!(home.rooms.contains(&room2));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 2);
+    assert!(rooms.contains(room2.get_location_name()));
 
     // Add room with same name, it should replace the existing one
     let room3 = Room::new("Living Room".into());
     home.add_room(room3.clone());
-    assert_eq!(home.rooms.len(), 2);
-    assert!(home.rooms.contains(&room3));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 2);
+    assert!(rooms.contains(room3.get_location_name()));
 }
 
 #[test]
@@ -41,15 +46,17 @@ fn test_with_room() {
         .with_room(room1.clone())
         .with_room(room2.clone());
 
-    assert_eq!(home.rooms.len(), 2);
-    assert!(home.rooms.contains(&room1));
-    assert!(home.rooms.contains(&room2));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 2);
+    assert!(rooms.contains(room1.get_location_name()));
+    assert!(rooms.contains(room2.get_location_name()));
 
     // Add room with same name, it should replace the existing one
     let room3 = Room::new("Living Room".into());
     let home = home.with_room(room3.clone());
-    assert_eq!(home.rooms.len(), 2);
-    assert!(home.rooms.contains(&room3));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 2);
+    assert!(rooms.contains(room3.get_location_name()));
 }
 
 #[test]
@@ -64,16 +71,18 @@ fn test_with_rooms() {
         .with_rooms(new_rooms.into_iter())
         .with_room(room1.clone());
 
-    assert_eq!(home.rooms.len(), 3);
-    assert!(home.rooms.get(&room1).is_some());
-    assert!(home.rooms.get(&room2).is_some());
-    assert!(home.rooms.get(&room3).is_some());
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 3);
+    assert!(rooms.contains(room1.get_location_name()));
+    assert!(rooms.contains(room2.get_location_name()));
+    assert!(rooms.contains(room3.get_location_name()));
 
     // Add room with same name, it should replace the existing one
     let room4 = Room::new("Living Room".into());
     let home = home.with_room(room4.clone());
-    assert_eq!(home.rooms.len(), 3);
-    assert!(home.rooms.contains(&room4));
+    let rooms = home.get_rooms();
+    assert_eq!(rooms.len(), 3);
+    assert!(rooms.contains(room4.get_location_name()));
 }
 
 #[test]
@@ -87,8 +96,8 @@ fn test_get_rooms() {
 
     let returned_rooms = home.get_rooms();
     assert_eq!(returned_rooms.len(), 2);
-    assert!(returned_rooms.contains(&room1.name));
-    assert!(returned_rooms.contains(&room2.name));
+    assert!(returned_rooms.contains(room1.get_location_name()));
+    assert!(returned_rooms.contains(room2.get_location_name()));
 }
 
 #[test]
@@ -100,15 +109,15 @@ fn test_get_devices_in_room() {
         .with_device(device1.name.clone())
         .with_device(device2.name.clone());
 
-    let home = SmartHome::new("My Home".into()).with_room(room);
+    let home = SmartHome::new("My Home".into()).with_room(room.clone());
 
-    let returned_devices = home.get_devices_in_room("Living Room");
+    let returned_devices = home.get_devices_in_room(&room).unwrap();
     assert_eq!(returned_devices.len(), 2);
     assert!(returned_devices.contains(&device1.name));
     assert!(returned_devices.contains(&device2.name));
 
-    let should_be_empty = home.get_devices_in_room("Bedroom");
-    assert_eq!(should_be_empty.len(), 0);
+    let should_be_none = home.get_devices_in_room(&Room::new("Bedroom".into()));
+    assert_eq!(should_be_none, None);
 }
 
 #[test]

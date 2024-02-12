@@ -1,29 +1,30 @@
-use crate::location::room::Room;
+use crate::location::room::{DeviceLocation, Room};
 
 #[test]
 fn test_new_room() {
     let room = Room::new("Living Room".into());
-    assert_eq!(room.name, "Living Room");
-    assert!(room.devices.is_empty());
+    assert_eq!(room.get_location_name(), "Living Room");
+    assert!(room.device_names().count() == 0);
 }
 
 #[test]
 fn test_add_device() {
     let mut room = Room::new("Bedroom".into());
-    room.add_device("Lamp".into());
-    assert!(room.devices.contains("Lamp"));
+    let r = room.add_device("Lamp".into());
+    assert!(r.is_ok());
+    assert!(room.device_names().any(|n| n == "Lamp"));
 }
 
 #[test]
 fn test_with_device() {
     let room = Room::new("Bathroom".into()).with_device("Shower".into());
-    assert!(room.devices.contains("Shower"));
+    assert!(room.device_names().any(|n| n == "Shower"));
 }
 
 #[test]
 fn test_with_devices() {
     let room = Room::new("Kitchen".into())
         .with_devices(vec!["Oven".into(), "Microwave".into()].into_iter());
-    assert!(room.devices.contains("Oven"));
-    assert!(room.devices.contains("Microwave"));
+    assert!(room.device_names().any(|n| n == "Oven"));
+    assert!(room.device_names().any(|n| n == "Microwave"));
 }
