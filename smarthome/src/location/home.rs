@@ -1,69 +1,118 @@
 use crate::providers::DeviceInfoProvider;
 
+use super::room::DeviceLocation;
 use super::room::Room;
-use super::DeviceName;
-use super::RoomName;
 
-use std::collections::HashSet;
+pub trait LocationSchema {
+    type R: DeviceLocation<LocationName = Self::L, DeviceName = Self::D>;
+    type L;
+    type D;
+    //type DeviceName = DeviceLocation::DeviceName;
+    #[must_use]
+    fn new(name: String) -> Self;
+
+    fn get_name(&self) -> &str;
+
+    /// room with equal name will be replaced by new one
+    fn add_room(&mut self, room: Self::R);
+
+    // Библиотека позволяет запросить список помещений в доме.
+    #[must_use]
+    fn get_rooms(&self) -> Vec<Self::L>;
+
+    // Библиотека позволяет получать список устройств в помещении.
+    fn get_devices_in_room(&self, room: &Self::R) -> Option<Vec<Self::D>>;
+
+    // Библиотека имеет функцию, возвращающую текстовый отчёт о состоянии дома
+    fn create_report<T>(&self, info_provider: &T) -> String
+    where
+        T: DeviceInfoProvider<RoomName = Self::L, DeviceName = Self::D>;
+}
 
 // Дом имеет название и содержит несколько помещений
 // Помещение имеет уникальное название
 pub struct SmartHome {
-    pub(crate) name: String,
-    pub(crate) rooms: HashSet<Room>,
+    name: String,
+    rooms: Vec<Room>,
 }
 
 impl SmartHome {
+    fn try_find_room_mut(&mut self, r: &Room) -> Option<&mut Room> {
+        self.rooms
+            .iter_mut()
+            .find(|room| room.get_location_name() == r.get_location_name())
+    }
     #[must_use]
-    pub fn new(name: String) -> Self {
+    pub fn with_rooms(mut self, rooms: impl Iterator<Item = Room>) -> Self {
+        for room in rooms {
+            self.add_room(room);
+        }
+        self
+    }
+
+    #[must_use]
+    pub fn with_room(mut self, room: Room) -> Self {
+        self.add_room(room);
+        self
+    }
+}
+
+impl LocationSchema for SmartHome {
+    type R = Room;
+    type D = <Self::R as DeviceLocation>::DeviceName;
+    type L = <Self::R as DeviceLocation>::LocationName;
+    #[must_use]
+    fn new(name: String) -> Self {
         Self {
             name,
-            rooms: HashSet::new(),
+            rooms: Vec::new(),
         }
     }
     /// room with equal name will be replaced by new one
-    pub fn add_room(&mut self, room: Room) {
-        self.rooms.insert(room);
-    }
-    /// room with equal name will be replaced by new one
-    #[must_use]
-    pub fn with_room(mut self, room: Room) -> Self {
-        self.rooms.insert(room);
-        self
-    }
-    /// room with equal name will be replaced by new one
-    #[must_use]
-    pub fn with_rooms(mut self, new_rooms: impl Iterator<Item = Room>) -> Self {
-        self.rooms.extend(new_rooms);
-        self
+    fn add_room(&mut self, room: Room) {
+        match self.try_find_room_mut(&room) {
+            Some(entry) => *entry = room,
+            None => self.rooms.push(room),
+        }
     }
 
     // Библиотека позволяет запросить список помещений в доме.
     #[must_use]
-    pub fn get_rooms(&self) -> Vec<RoomName> {
-        self.rooms.iter().map(|r| r.name.clone()).collect()
+    fn get_rooms(&self) -> Vec<Self::L> {
+        self.rooms
+            .iter()
+            .map(|r| r.get_location_name().clone())
+            .collect()
     }
     // Библиотека позволяет получать список устройств в помещении.
-    pub fn get_devices_in_room(&self, room: &str) -> Vec<DeviceName> {
+    fn get_devices_in_room(&self, room: &Self::R) -> Option<Vec<Self::D>> {
+        let room_name = room.get_location_name();
         self.rooms
-            .get(room)
-            .map_or_else(Vec::new, |r| r.devices.iter().cloned().collect())
+            .iter()
+            .find(|r| r.get_location_name() == room_name)
+            .map(|r| r.device_names().cloned().collect())
     }
     // Библиотека имеет функцию, возвращающую текстовый отчёт о состоянии дома
-    pub fn create_report<T>(&self, info_provider: &T) -> String
+    fn create_report<T>(&self, info_provider: &T) -> String
     where
-        T: DeviceInfoProvider<RoomName = RoomName, DeviceName = DeviceName>,
+        T: DeviceInfoProvider<RoomName = Self::L, DeviceName = Self::D>,
     {
         let mut report = String::new();
+        report.push_str(&format!("Home: {}\n", self.name));
         for room in &self.rooms {
-            report.push_str(&format!("Room: {}\n", room.name));
-            for device in &room.devices {
-                if let Ok(state) = info_provider.get_device_state(&room.name, device) {
+            report.push_str(&format!("Room: {}\n", room.get_location_name()));
+            for device in room.device_names() {
+                if let Ok(state) = info_provider.get_device_state(room.get_location_name(), device)
+                {
                     let device_line = format!("Device: {device}\n{state}\n");
                     report.push_str(&device_line);
                 };
             }
         }
         report
+    }
+
+    fn get_name(&self) -> &str {
+        self.name.as_str()
     }
 }
