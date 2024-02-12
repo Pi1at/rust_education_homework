@@ -168,3 +168,40 @@ fn test_create_report() {
 
     assert!(!report.contains("ERROR"));
 }
+
+#[test]
+fn test_delete_room_positive() {
+    let mut hotel = SmartHome::new("Hotel".into());
+    let room1 = Room::new("Room 1".into());
+    let room2 = Room::new("Room 2".into());
+    hotel.add_room(room1.clone());
+    hotel.add_room(room2);
+
+    assert_eq!(hotel.get_room_names().len(), 2);
+
+    hotel.delete_room(room1);
+
+    assert_eq!(hotel.get_room_names().len(), 1);
+    assert_eq!(hotel.get_room_names()[0], "Room 2");
+}
+
+#[test]
+fn test_delete_room_negative() {
+    let mut hotel = SmartHome::new("Hotel".into());
+    let room1 = Room::new("Room 1".into());
+    let room2 = Room::new("Room 2".into());
+    hotel.add_room(room1.clone());
+    hotel.add_room(room2);
+
+    assert_eq!(hotel.get_room_names().len(), 2);
+
+    hotel.delete_room(room1.clone());
+
+    assert_eq!(hotel.get_room_names().len(), 1);
+    assert_eq!(hotel.get_room_names()[0], "Room 2");
+
+    hotel.delete_room(room1);
+
+    assert_eq!(hotel.get_room_names().len(), 1);
+    assert_eq!(hotel.get_room_names()[0], "Room 2");
+}

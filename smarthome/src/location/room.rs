@@ -17,6 +17,13 @@ pub trait DeviceLocation {
     ///
     /// This function will return an error if device name is not unique or element cannot be added for some reason.
     fn add_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error>;
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if implementation cannot delete element.
+    fn remove_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error>;
+
     fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName>;
 }
 
@@ -73,5 +80,10 @@ impl DeviceLocation for Room {
 
     fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName> {
         self.devices.iter()
+    }
+    ///  current implementation always returns Ok()
+    fn remove_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error> {
+        self.devices.retain(|d| *d != device);
+        Ok(())
     }
 }
