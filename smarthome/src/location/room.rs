@@ -15,7 +15,7 @@ pub trait DeviceLocation {
     ///
     /// # Errors
     ///
-    /// This function will return an error if device name is not unique.
+    /// This function will return an error if device name is not unique or element cannot be added for some reason.
     fn add_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error>;
     fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName>;
 }

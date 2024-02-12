@@ -15,10 +15,12 @@ pub trait LocationSchema {
 
     /// room with equal name will be replaced by new one
     fn add_room(&mut self, room: Self::R);
+    /// delete room
+    fn delete_room(&mut self, room: Self::R);
 
     // Библиотека позволяет запросить список помещений в доме.
     #[must_use]
-    fn get_rooms(&self) -> Vec<Self::L>;
+    fn get_room_names(&self) -> Vec<Self::L>;
 
     // Библиотека позволяет получать список устройств в помещении.
     fn get_devices_in_room(&self, room: &Self::R) -> Option<Vec<Self::D>>;
@@ -78,7 +80,7 @@ impl LocationSchema for SmartHome {
 
     // Библиотека позволяет запросить список помещений в доме.
     #[must_use]
-    fn get_rooms(&self) -> Vec<Self::L> {
+    fn get_room_names(&self) -> Vec<Self::L> {
         self.rooms
             .iter()
             .map(|r| r.get_location_name().clone())
@@ -114,5 +116,10 @@ impl LocationSchema for SmartHome {
 
     fn get_name(&self) -> &str {
         self.name.as_str()
+    }
+
+    fn delete_room(&mut self, room: Self::R) {
+        let room_name = room.get_location_name();
+        self.rooms.retain(|r| r.get_location_name() != room_name);
     }
 }

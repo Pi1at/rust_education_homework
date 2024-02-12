@@ -10,7 +10,7 @@ use crate::providers::DeviceInfoProvider;
 fn test_new_smart_home() {
     let home = SmartHome::new("My Home".into());
     assert_eq!(home.get_name(), "My Home");
-    assert_eq!(home.get_rooms().len(), 0);
+    assert_eq!(home.get_room_names().len(), 0);
 }
 
 #[test]
@@ -20,19 +20,19 @@ fn test_add_room() {
     let room2 = Room::new("Bedroom".into());
 
     home.add_room(room1.clone());
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 1);
     assert!(rooms.contains(room1.get_location_name()));
 
     home.add_room(room2.clone());
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 2);
     assert!(rooms.contains(room2.get_location_name()));
 
     // Add room with same name, it should replace the existing one
     let room3 = Room::new("Living Room".into());
     home.add_room(room3.clone());
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 2);
     assert!(rooms.contains(room3.get_location_name()));
 }
@@ -46,7 +46,7 @@ fn test_with_room() {
         .with_room(room1.clone())
         .with_room(room2.clone());
 
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 2);
     assert!(rooms.contains(room1.get_location_name()));
     assert!(rooms.contains(room2.get_location_name()));
@@ -54,7 +54,7 @@ fn test_with_room() {
     // Add room with same name, it should replace the existing one
     let room3 = Room::new("Living Room".into());
     let home = home.with_room(room3.clone());
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 2);
     assert!(rooms.contains(room3.get_location_name()));
 }
@@ -71,7 +71,7 @@ fn test_with_rooms() {
         .with_rooms(new_rooms.into_iter())
         .with_room(room1.clone());
 
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 3);
     assert!(rooms.contains(room1.get_location_name()));
     assert!(rooms.contains(room2.get_location_name()));
@@ -80,7 +80,7 @@ fn test_with_rooms() {
     // Add room with same name, it should replace the existing one
     let room4 = Room::new("Living Room".into());
     let home = home.with_room(room4.clone());
-    let rooms = home.get_rooms();
+    let rooms = home.get_room_names();
     assert_eq!(rooms.len(), 3);
     assert!(rooms.contains(room4.get_location_name()));
 }
@@ -94,7 +94,7 @@ fn test_get_rooms() {
         .with_room(room1.clone())
         .with_room(room2.clone());
 
-    let returned_rooms = home.get_rooms();
+    let returned_rooms = home.get_room_names();
     assert_eq!(returned_rooms.len(), 2);
     assert!(returned_rooms.contains(room1.get_location_name()));
     assert!(returned_rooms.contains(room2.get_location_name()));
