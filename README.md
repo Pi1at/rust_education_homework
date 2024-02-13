@@ -7,7 +7,7 @@
 - [x] Умный дом #2 [link](./homework%20tasks/3%20-%20Умный%20дом%20№2.md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-3/smarthome)
 - [x] Делим и тестируем прототип "умного дома" [link](./homework%20tasks/4%20-%20Делим%20и%20тестируем%20прототип%20"умного%20дома".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-4/smarthome)
 - [ ] Обработка ошибок в прототипе "умного дома" [link](./homework%20tasks/5%20-%20Обработка%20ошибок%20в%20прототипе%20"умного%20дома".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-5/smarthome)
-- [ ] Динамический "Умный дом" [link](./homework%20tasks/6%20-%20Динамический%20"Умный%20дом".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-5/smarthome)
+- [ ] Динамический "Умный дом" [link](./homework%20tasks/6%20-%20Динамический%20"Умный%20дом".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-6/smarthome)
 - [ ] Умная розетка по TCP [link](./homework%20tasks/7%20-%20Умная%20розетка%20по%20TCP.md)
 - [ ] Термометр по UDP [link](./homework%20tasks/8%20-%20Термометр%20по%20UDP.md)
 - [ ] Асинхронное сетевое взаимодействие [link](./homework%20tasks/9%20-%20Асинхронное%20сетевое%20взаимодействие.md)
