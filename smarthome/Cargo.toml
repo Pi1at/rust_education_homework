@@ -2,8 +2,21 @@
 # unsafe_code = "forbid"
 # unused = "allow" # For experimental dev.
 
+[workspace.lints.clippy]
+#cargo       = "warn"
+all         = "warn"
+complexity  = "warn"
+correctness = "deny"
+nursery     = "warn"
+pedantic    = "warn"
+perf        = "deny"
+style       = "warn"
+suspicious  = "warn"
+
+cast_possible_truncation    = "warn"
+empty_structs_with_brackets = "warn"
+
 [workspace]
-resolver = "2"
 members = [
     # -- Application Libraries
     "crates/libs/smarthome", #
@@ -14,7 +27,8 @@ members = [
     # -- Tools
     #"crates/tools/*",
 ]
-
+package.license = "MIT"
+resolver = "2"
 # NOTE: Only the crates that are utilized in two or more sub-crates and benefit from global management are handled in workspace.dependencies. Other strategies may also be valid.
 [workspace.dependencies]
 # -- Serde
