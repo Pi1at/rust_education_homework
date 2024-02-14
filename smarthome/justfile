@@ -20,3 +20,5 @@ watch:
   cargo watch --clear --postpone -x 'clippy --lib' -x 'test --lib -- --show-output' -x 'run'
 tcp_plug:
   cargo run --package tcp-plug-socket --example tcp_plugsocket_imitator
+tcp_command_sender:
+  cargo run --package tcp-plug-socket --example simple_command_sender
