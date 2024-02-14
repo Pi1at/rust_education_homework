@@ -19,7 +19,8 @@ empty_structs_with_brackets = "warn"
 [workspace]
 members = [
     # -- Application Libraries
-    "crates/libs/smarthome", #
+    "crates/libs/smarthome",
+    "crates/libs/tcp-plug-socket",
 
     # -- Application Services
     #"crates/services/*",
