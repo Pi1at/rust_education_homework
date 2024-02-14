@@ -1,8 +1,13 @@
 // разрешим пока прототип
 #![allow(dead_code)]
 use smarthome::{
-    devices::{socket::SmartSocket, thermometer::SmartThermometer},
-    location::{home::SmartHome, room::Room},
+    devices::{socket::SmartSocket, thermometer::SmartThermometer, Construct},
+    location::{
+        self,
+        home::{LocationSchema, SmartHome},
+        room::{DeviceLocation, Room},
+        DeviceName, RoomName,
+    },
     providers::DeviceInfoProvider,
 };
 
@@ -11,15 +16,21 @@ struct OwningDeviceInfoProvider {
 }
 
 impl DeviceInfoProvider for OwningDeviceInfoProvider {
-    fn get_device_state(&self, _room: &str, device: &str) -> String {
-        if self.socket.name == device {
-            format!(
+    type DeviceName = location::DeviceName;
+    type RoomName = location::RoomName;
+    fn get_device_state(
+        &self,
+        _room: &RoomName,
+        device: &DeviceName,
+    ) -> Result<String, &'static str> {
+        if self.socket.name == *device {
+            Ok(format!(
                 "{} power: {} W",
                 device,
                 self.socket.get_current_power_usage()
-            )
+            ))
         } else {
-            format!("ERROR: Device {device} not found")
+            Err("Device not found")
         }
     }
 }
@@ -30,17 +41,23 @@ struct BorrowingDeviceInfoProvider<'a, 'b> {
 }
 
 impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
-    fn get_device_state(&self, _room: &str, device: &str) -> String {
-        if self.socket.name == device {
-            format!(
+    type DeviceName = location::DeviceName;
+    type RoomName = location::RoomName;
+    fn get_device_state(
+        &self,
+        _room: &RoomName,
+        device: &DeviceName,
+    ) -> Result<String, &'static str> {
+        if self.socket.name == *device {
+            Ok(format!(
                 "{} power: {} W",
                 device,
                 self.socket.get_current_power_usage()
-            )
-        } else if self.thermo.name == device {
-            format!("{} {} °C", device, self.thermo.get_temperature())
+            ))
+        } else if self.thermo.name == *device {
+            Ok(format!("{} {} °C", device, self.thermo.get_temperature()))
         } else {
-            format!("ERROR: Device {device} not found")
+            Err("Device not found")
         }
     }
 }
@@ -54,7 +71,7 @@ fn main() {
     let outdoor = Room::new("Outdoor".into())
         .with_devices([socket2.name.clone(), thermo.name.clone()].into_iter());
     // Инициализация дома
-    let house = SmartHome::new("House").with_rooms([kitchen, outdoor].into_iter());
+    let house = SmartHome::new("House".into()).with_rooms([kitchen, outdoor].into_iter());
 
     // Строим отчёт с использованием `OwningDeviceInfoProvider`.
     let mut info_provider_1 = OwningDeviceInfoProvider { socket: socket1 };

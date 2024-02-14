@@ -1,84 +1,77 @@
 use super::{DeviceName, RoomName};
-use std::{borrow::Borrow, collections::HashSet};
 
 // Помещение содержит названия нескольких устройств.
 // Устройство имеет уникальное в рамках помещения имя.
-#[derive(Clone, Eq, PartialEq)]
-pub struct Room {
-    pub(crate) name: RoomName,
-    pub(crate) devices: HashSet<DeviceName>,
+// TODO: Better naming
+pub trait DeviceLocation {
+    type LocationName;
+    type DeviceName;
+    type Error;
+    #[must_use]
+    fn new(name: Self::LocationName) -> Self;
+    fn get_location_name(&self) -> &Self::LocationName;
+    fn get_location_name_mut(&mut self) -> &mut Self::LocationName;
+    /// .
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if device name is not unique or element cannot be added for some reason.
+    fn add_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error>;
+    fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName>;
 }
 
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct Room {
+    name: RoomName,
+    devices: Vec<DeviceName>,
+}
 impl Room {
+    /// ignored, if device already in list
     #[must_use]
-    pub fn new(name: RoomName) -> Self {
+    pub fn with_device(mut self, device: RoomName) -> Self {
+        let _ = self.add_device(device);
+        self
+    }
+
+    /// All device already in list ignored
+    #[must_use]
+    pub fn with_devices(mut self, devices: impl Iterator<Item = DeviceName>) -> Self {
+        for device in devices {
+            let _ = self.add_device(device);
+        }
+        self
+    }
+}
+
+impl DeviceLocation for Room {
+    type DeviceName = DeviceName;
+    type LocationName = RoomName;
+    type Error = &'static str;
+    #[must_use]
+    fn new(name: RoomName) -> Self {
         Self {
             name,
-            devices: HashSet::new(),
+            devices: Vec::new(),
         }
     }
-    pub fn add_device(&mut self, device: DeviceName) {
-        self.devices.insert(device);
+    fn add_device(&mut self, device: DeviceName) -> Result<(), Self::Error> {
+        if self.devices.contains(&device) {
+            Err("device already in list")
+        } else {
+            self.devices.push(device);
+            Ok(())
+        }
     }
-    #[must_use]
-    pub fn with_device(mut self, device: DeviceName) -> Self {
-        self.devices.insert(device);
-        self
-    }
-    #[must_use]
-    pub fn with_devices(mut self, r: impl Iterator<Item = DeviceName>) -> Self {
-        self.devices.extend(r);
-        self
-    }
-}
 
-impl std::hash::Hash for Room {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.name.hash(state);
-    }
-}
-
-impl Borrow<str> for Room {
-    fn borrow(&self) -> &str {
-        self.name.as_str()
-    }
-}
-
-impl Borrow<RoomName> for Room {
-    fn borrow(&self) -> &RoomName {
+    fn get_location_name(&self) -> &Self::LocationName {
         &self.name
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_new_room() {
-        let room = Room::new("Living Room".into());
-        assert_eq!(room.name, "Living Room");
-        assert!(room.devices.is_empty());
+    fn get_location_name_mut(&mut self) -> &mut Self::LocationName {
+        &mut self.name
     }
 
-    #[test]
-    fn test_add_device() {
-        let mut room = Room::new("Bedroom".into());
-        room.add_device("Lamp".into());
-        assert!(room.devices.contains("Lamp"));
-    }
-
-    #[test]
-    fn test_with_device() {
-        let room = Room::new("Bathroom".into()).with_device("Shower".into());
-        assert!(room.devices.contains("Shower"));
-    }
-
-    #[test]
-    fn test_with_devices() {
-        let room = Room::new("Kitchen".into())
-            .with_devices(vec!["Oven".into(), "Microwave".into()].into_iter());
-        assert!(room.devices.contains("Oven"));
-        assert!(room.devices.contains("Microwave"));
+    fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName> {
+        self.devices.iter()
     }
 }

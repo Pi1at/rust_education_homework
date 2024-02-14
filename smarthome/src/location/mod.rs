@@ -3,5 +3,5 @@
 pub mod home;
 pub mod room;
 
-pub(crate) type DeviceName = String;
-pub(crate) type RoomName = String;
+pub type DeviceName = String;
+pub type RoomName = String;
