@@ -174,12 +174,22 @@ pub struct TcpPlugOddSocket {
 struct Power(f32);
 
 #[derive(Debug, Clone)]
-struct WrongResponse;
-impl fmt::Display for WrongResponse {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "WrongResponse")
+struct WrongResponse {
+    message: String,
+}
+
+impl WrongResponse {
+    const fn new(message: String) -> Self {
+        Self { message }
     }
 }
+
+impl fmt::Display for WrongResponse {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "WrongResponse: {}", self.message)
+    }
+}
+
 impl error::Error for WrongResponse {}
 
 /// returns cached power usage
@@ -235,7 +245,7 @@ impl TcpPlugOddSocket {
             OddResponse::Reserved(buf) if buf[0] == 42u8 => {
                 self.delimiter = u16::from_be_bytes(buf[1..].try_into().unwrap_or([0, 1])).into();
             }
-            _ => return Err(WrongResponse.into()),
+            _ => return Err(WrongResponse::new(format!("{res}")).into()),
         };
         Ok(self)
     }
