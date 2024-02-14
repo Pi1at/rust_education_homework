@@ -9,7 +9,9 @@ fn main() {
     let mut args = std::env::args();
     args.next().unwrap();
 
-    let server_address = args.next().unwrap_or_else(|| "127.0.0.1:6969".into());
+    let default_address =
+        std::env::var("TCP_PLUG_ADDRESS").unwrap_or_else(|_| "127.0.0.1:6969".into());
+    let server_address = args.next().unwrap_or(default_address);
 
     let listener = TcpListener::bind(server_address).expect("can't bind tcp listener");
 
