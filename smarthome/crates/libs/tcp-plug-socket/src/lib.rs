@@ -194,6 +194,7 @@ impl error::Error for WrongResponse {}
 
 /// returns cached power usage
 impl Gauge<Power> for TcpPlugOddSocket {
+    type R = Power;
     fn get_measure(&self) -> Power {
         Power(self.cached_pu)
     }

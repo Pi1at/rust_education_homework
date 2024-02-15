@@ -9,8 +9,10 @@ pub trait Construct {
     fn new(name: DeviceName) -> Self;
 }
 pub trait Gauge<T> {
+    /// return type
+    type R;
     #[must_use]
-    fn get_measure(&self) -> T;
+    fn get_measure(&self) -> Self::R;
 }
 pub trait SendCommand<Command> {
     type R;
