@@ -28,8 +28,9 @@ members = [
     # -- Tools
     #"crates/tools/*",
 ]
-package.license = "MIT"
 resolver = "2"
+[workspace.package]
+license = "MIT"
 # NOTE: Only the crates that are utilized in two or more sub-crates and benefit from global management are handled in workspace.dependencies. Other strategies may also be valid.
 [workspace.dependencies]
 # -- Serde
