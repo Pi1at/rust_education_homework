@@ -47,7 +47,11 @@ impl Display for Command {
             Self::IsEnabled => write!(f, "Is enabled"),
             Self::GetCurrentPowerUsage => write!(f, "Get current power usage"),
             Self::GetMaxPowerUsage => write!(f, "Get max power usage"),
-            Self::Reserved { command_id } => write!(f, "Reserved :[{command_id}]"),
+            Self::Reserved { command_id } => {
+                write!(f, "Reserved :[")?;
+                command_id.fmt(f)?;
+                write!(f, "]")
+            }
         }
     }
 }
