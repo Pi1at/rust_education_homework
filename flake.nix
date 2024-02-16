@@ -20,6 +20,7 @@
           pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
         nativeBuildInputs = with pkgs; [
           just
+          cargo-generate
           cargo-llvm-cov
           cargo-watch
           rustToolchain
