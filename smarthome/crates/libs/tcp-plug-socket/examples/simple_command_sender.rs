@@ -5,11 +5,9 @@ use std::{io, thread::sleep, time::Duration};
 use tcp_plug_socket::{command::Command, TcpPlugOddSocket};
 fn main() -> Result<()> {
     const MAX_RETRY_LIMIT: i32 = 30;
-    let mut args = std::env::args();
-    args.next().unwrap();
     let default_address =
         std::env::var("TCP_PLUG_ADDRESS").unwrap_or_else(|_| "127.0.0.1:6969".into());
-    let plug_addr = args.next().unwrap_or(default_address);
+    let plug_addr = std::env::args().nth(1).unwrap_or(default_address);
     eprint!("Connecting to plug with address {plug_addr}");
     let mut test_socket = TcpPlugOddSocket::new(&plug_addr);
     let mut retry_count = 0;
