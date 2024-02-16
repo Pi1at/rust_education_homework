@@ -21,6 +21,7 @@ members = [
     # -- Application Libraries
     "crates/libs/smarthome",
     "crates/libs/tcp-plug-socket",
+    "crates/libs/udp-thermometer",
 
     # -- Application Services
     #"crates/services/*",

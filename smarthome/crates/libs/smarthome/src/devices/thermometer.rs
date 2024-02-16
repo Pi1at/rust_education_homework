@@ -17,6 +17,7 @@ impl Construct for SmartThermometer {
     }
 }
 impl Gauge<Temperature> for SmartThermometer {
+    type R = Temperature;
     #[must_use]
     fn get_measure(&self) -> Temperature {
         10.0

@@ -25,6 +25,8 @@ impl Construct for SmartSocket {
     }
 }
 impl Gauge<Watt> for SmartSocket {
+    type R = Watt;
+
     fn get_measure(&self) -> Watt {
         match self.state {
             SmartSocketState::On => 1242,
