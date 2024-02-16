@@ -2,7 +2,7 @@ use std::{
     io::{Read, Write},
     net::TcpListener,
 };
-use tcp_plug_socket::{command::Command, OddResponse};
+use tcp_plug_socket::{Command, OddResponse};
 
 /// Imitate odd TCP Smart plug socket, with no floats avaiable
 fn main() {

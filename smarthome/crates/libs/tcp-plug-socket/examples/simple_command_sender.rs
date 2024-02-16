@@ -2,7 +2,7 @@ use anyhow::anyhow;
 use anyhow::Result;
 use smarthome::devices::SendCommand;
 use std::{io, thread::sleep, time::Duration};
-use tcp_plug_socket::{command::Command, TcpPlugOddSocket};
+use tcp_plug_socket::{Command, TcpPlugOddSocket};
 fn main() -> Result<()> {
     const MAX_RETRY_LIMIT: i32 = 30;
     let default_address =
