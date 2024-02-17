@@ -41,8 +41,7 @@ impl SendCommand<Command> for TcpPlugOddSocket {
     fn send_command(&mut self, command: Command) -> Self::R {
         let odd_resp = self.send_command(u8::from(command))?;
         self.update_state(odd_resp);
-        let x = self.convert_response(odd_resp);
-        Ok(x)
+        Ok(self.convert_response(odd_resp))
     }
 }
 

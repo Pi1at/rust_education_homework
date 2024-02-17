@@ -6,12 +6,9 @@ use tcp_plug_socket::{Command, OddResponse};
 
 /// Imitate odd TCP Smart plug socket, with no floats avaiable
 fn main() {
-    let mut args = std::env::args();
-    args.next().unwrap();
-
     let default_address =
         std::env::var("TCP_PLUG_ADDRESS").unwrap_or_else(|_| "127.0.0.1:6969".into());
-    let server_address = args.next().unwrap_or(default_address);
+    let server_address = std::env::args().nth(1).unwrap_or(default_address);
 
     let listener = TcpListener::bind(server_address).expect("can't bind tcp listener");
 
