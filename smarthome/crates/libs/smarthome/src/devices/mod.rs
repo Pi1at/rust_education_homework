@@ -18,3 +18,11 @@ pub trait SendCommand<Command> {
     type R;
     fn send_command(&mut self, command: Command) -> Self::R;
 }
+
+pub trait SendCommandAsync<Command> {
+    type R;
+    fn send_command(
+        &mut self,
+        command: Command,
+    ) -> impl std::future::Future<Output = Self::R> + Send;
+}
