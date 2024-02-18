@@ -23,7 +23,6 @@ members = [
     "crates/libs/tcp-plug-socket",
     "crates/libs/tcp-plug-socket-async",
     "crates/libs/udp-thermometer",
-    "crates/libs/udp-thermpmeter-async",
 
     # -- Application Services
     #"crates/services/*",
