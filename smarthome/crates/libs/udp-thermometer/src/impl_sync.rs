@@ -47,7 +47,10 @@ impl UdpThermo<SyncVer> {
                     None
                 }
             };
-            *temperature_clone.lock().unwrap() = res;
+            match temperature_clone.lock() {
+                Ok(mut temperature) => *temperature = res,
+                Err(e) => eprintln!("Failed to acquire lock: {e}"),
+            }
         });
 
         Ok(Self {
