@@ -1,12 +1,10 @@
-use std::{
-    io::{Read, Write},
-    net::{TcpStream, ToSocketAddrs},
-};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::{TcpStream, ToSocketAddrs};
 
 pub use self::command::Command;
 pub use self::responses::{OddResponse, Response};
 use error::WrongResponse;
-use smarthome::devices::{Gauge, SendCommand};
+use smarthome::devices::{Gauge, SendCommandAsync};
 
 type Result<T> = core::result::Result<T, Error>;
 type Error = Box<dyn std::error::Error>; // For early dev.
@@ -35,23 +33,23 @@ impl Gauge<Power> for TcpPlugOddSocket {
     }
 }
 
-impl SendCommand<Command> for TcpPlugOddSocket {
+impl SendCommandAsync<Command> for TcpPlugOddSocket {
     type R = Result<Response>;
     #[must_use]
-    fn send_command(&mut self, command: Command) -> Self::R {
-        let odd_resp = self.send_command(u8::from(command))?;
+    async fn send_command(&mut self, command: Command) -> Self::R {
+        let odd_resp = self.send_command(u8::from(command)).await?;
         self.update_state(odd_resp);
         Ok(self.convert_response(odd_resp))
     }
 }
 
-impl SendCommand<u8> for TcpPlugOddSocket {
+impl SendCommandAsync<u8> for TcpPlugOddSocket {
     type R = Result<OddResponse>;
-    fn send_command(&mut self, raw_command: u8) -> Self::R {
-        self.stream.write_all(&[raw_command])?;
+    async fn send_command(&mut self, raw_command: u8) -> Self::R {
+        self.stream.write_all(&[raw_command]).await?;
         // reading OddResponse
         let mut buffer = [0u8; 4];
-        self.stream.read_exact(&mut buffer)?;
+        self.stream.read_exact(&mut buffer).await?;
         // now we need convert it to Response type
         Ok((&buffer).into())
     }
@@ -63,19 +61,20 @@ impl TcpPlugOddSocket {
     /// # Errors
     ///
     /// This function will return an error if connection or calibration fails
-    pub fn new(plug_addr: impl ToSocketAddrs) -> Result<Self> {
-        let stream = TcpStream::connect(plug_addr)?;
+    pub async fn new<T: ToSocketAddrs + Send>(plug_addr: T) -> Result<Self> {
+        let stream = TcpStream::connect(plug_addr).await?;
         let calibrated = Self {
             stream,
             delimiter: 1.0,
             cached_pu: 0.0,
         }
-        .calibrate()?;
+        .calibrate()
+        .await?;
         Ok(calibrated)
     }
-    fn calibrate(mut self) -> Result<Self> {
+    async fn calibrate(mut self) -> Result<Self> {
         let raw: u8 = Command::Reserved { command_id: 42 }.into();
-        let res = self.send_command(raw)?;
+        let res = self.send_command(raw).await?;
         match res {
             OddResponse::Reserved(buf) if buf[0] == 42u8 => {
                 self.delimiter = u16::from_be_bytes(buf[1..].try_into().unwrap_or([0, 1])).into();

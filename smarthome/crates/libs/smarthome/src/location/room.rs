@@ -81,7 +81,7 @@ impl DeviceLocation for Room {
     fn device_names(&self) -> impl Iterator<Item = &Self::DeviceName> {
         self.devices.iter()
     }
-    ///  current implementation always returns Ok()
+    ///  current implementation always returns `Ok()`
     fn remove_device(&mut self, device: Self::DeviceName) -> Result<(), Self::Error> {
         self.devices.retain(|d| *d != device);
         Ok(())
