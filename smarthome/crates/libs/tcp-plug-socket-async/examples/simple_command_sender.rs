@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     }
     let mut odd_socket = test_socket.expect("no error expected there");
     show_menu();
-    let mut input = io::stdin().lines().flatten();
+    let mut input = io::stdin().lines().map_while(Result::ok);
     loop {
         eprint!("> ");
         if let Ok(cmd) = input
