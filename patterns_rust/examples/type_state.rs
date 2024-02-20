@@ -14,7 +14,7 @@ fn main() {
             .map(PdnSnils::from);
         match pdsnils {
             Ok(v) => {
-                println!("lets print hidden info {}", v);
+                println!("SNILS is hidden: {}", v);
                 println!("unmasking");
                 let sv = v.show();
                 println!("trying again: {}", sv)

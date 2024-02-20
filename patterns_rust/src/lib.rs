@@ -110,6 +110,7 @@ pub mod pdn_snils {
                 _marker: PhantomData::<ShowPdn>,
             }
         }
+        /// `get_snils` returns `None` for `HidePdn` state to enforce privacy.
         pub fn get_snils(&self) -> Option<&Snils> {
             None
         }
