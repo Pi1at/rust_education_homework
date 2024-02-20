@@ -43,7 +43,7 @@ pub mod snils {
                     }
                 }
             }
-            Err("Invalid SNILS format".into())
+            Err(format!("Invalid SNILS format {s}").into())
         }
     }
 
@@ -71,7 +71,21 @@ mod tests {
     use crate::snils::Snils;
     #[test]
     fn parsing_works() {
-        let result = "112-233-445 95".parse::<Snils>().unwrap();
-        println!("{}", result);
+        let result = "112-233-445 95".parse::<Snils>();
+        assert!(result.is_ok());
+        let result = "112233445 95".parse::<Snils>();
+        assert!(result.is_ok());
+        let result = "11223344595".parse::<Snils>();
+        assert!(result.is_ok());
+    }
+    #[test]
+    fn parse_error() {
+        let result = "112-233-435 95".parse::<Snils>();
+        assert!(result.is_err())
+    }
+    #[test]
+    fn display_works() {
+        let result = "112-233-445 95".parse::<Snils>();
+        assert_eq!(format!("{}", result.unwrap()), "112-233-445 95")
     }
 }

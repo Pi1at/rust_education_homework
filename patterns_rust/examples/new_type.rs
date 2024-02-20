@@ -8,10 +8,10 @@ fn main() {
         .lock()
         .lines()
         .next()
-        .expect("msg")
-        .expect("msg");
+        .expect("Failed to read from stdin")
+        .expect("expected a valid UTF-8 string");
     match s.parse::<Snils>() {
         Ok(good) => println!("validated {}", good),
-        Err(e) => println!("{e}"),
+        Err(e) => println!("Error validating SNILS: {e}"),
     }
 }
