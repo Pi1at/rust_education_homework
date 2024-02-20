@@ -65,10 +65,74 @@ pub mod snils {
     }
 }
 
+pub mod pdn_snils {
+    use std::{fmt::Display, marker::PhantomData};
+
+    use crate::snils::Snils;
+
+    pub struct ShowPdn {}
+    pub struct HidePdn {}
+
+    pub trait PdnState {}
+    impl PdnState for ShowPdn {}
+    impl PdnState for HidePdn {}
+
+    pub struct PdnSnils<S: PdnState> {
+        s: Snils,
+        _marker: PhantomData<S>,
+    }
+
+    impl Display for PdnSnils<ShowPdn> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            self.s.fmt(f)
+        }
+    }
+
+    impl Display for PdnSnils<HidePdn> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "***-***-*** **")
+        }
+    }
+
+    impl From<Snils> for PdnSnils<HidePdn> {
+        fn from(value: Snils) -> Self {
+            Self {
+                s: value,
+                _marker: PhantomData::<HidePdn>,
+            }
+        }
+    }
+
+    impl PdnSnils<HidePdn> {
+        pub fn show(self) -> PdnSnils<ShowPdn> {
+            PdnSnils::<ShowPdn> {
+                s: self.s,
+                _marker: PhantomData::<ShowPdn>,
+            }
+        }
+        pub fn get_snils(&self) -> Option<&Snils> {
+            None
+        }
+    }
+
+    impl PdnSnils<ShowPdn> {
+        pub fn hide(self) -> PdnSnils<HidePdn> {
+            PdnSnils::<HidePdn> {
+                s: self.s,
+                _marker: PhantomData::<HidePdn>,
+            }
+        }
+
+        pub fn get_snils(&self) -> Option<&Snils> {
+            Some(&self.s)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
-    use crate::snils::Snils;
+    use crate::{pdn_snils::PdnSnils, snils::Snils};
     #[test]
     fn parsing_works() {
         let result = "112-233-445 95".parse::<Snils>();
@@ -87,5 +151,16 @@ mod tests {
     fn display_works() {
         let result = "112-233-445 95".parse::<Snils>();
         assert_eq!(format!("{}", result.unwrap()), "112-233-445 95")
+    }
+
+    #[test]
+    fn pdn_logic_works() {
+        let snils = "112-233-445 95".parse::<Snils>().unwrap();
+        let ps = PdnSnils::from(snils);
+        assert!(ps.get_snils().is_none());
+        assert_eq!(format!("{}", ps), "***-***-*** **");
+        let unmasked = ps.show();
+        assert!(unmasked.get_snils().is_some());
+        assert_eq!(format!("{}", unmasked), "112-233-445 95");
     }
 }
