@@ -12,7 +12,7 @@ pub mod impl_sync;
 pub mod temperature;
 
 pub type Result<T> = core::result::Result<T, Error>;
-pub type Error = Box<dyn std::error::Error>; // For early dev.
+pub type Error = Box<dyn std::error::Error>;
 
 pub struct UdpThermo<S> {
     temperature: Arc<Mutex<Option<Temperature>>>,
