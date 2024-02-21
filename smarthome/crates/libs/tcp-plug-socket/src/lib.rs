@@ -5,11 +5,10 @@ use std::{
 
 pub use self::command::Command;
 pub use self::responses::{OddResponse, Response};
-use error::WrongResponse;
+use error::Error;
 use smarthome::devices::{Gauge, SendCommand};
 
 type Result<T> = core::result::Result<T, Error>;
-type Error = Box<dyn std::error::Error>; // For early dev.
 
 mod command;
 mod error;
@@ -74,13 +73,14 @@ impl TcpPlugOddSocket {
         Ok(calibrated)
     }
     fn calibrate(mut self) -> Result<Self> {
-        let raw: u8 = Command::Reserved { command_id: 42 }.into();
+        const CALIBRATE_CMD: command::Command = Command::Reserved { command_id: 42 };
+        let raw: u8 = CALIBRATE_CMD.into();
         let res = self.send_command(raw)?;
         match res {
             OddResponse::Reserved(buf) if buf[0] == 42u8 => {
                 self.delimiter = u16::from_be_bytes(buf[1..].try_into().unwrap_or([0, 1])).into();
             }
-            _ => return Err(WrongResponse::new(format!("{res}")).into()),
+            _ => return Err(Error::WrongResponse(CALIBRATE_CMD, res)),
         };
         Ok(self)
     }

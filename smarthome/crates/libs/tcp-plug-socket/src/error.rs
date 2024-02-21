@@ -1,20 +1,13 @@
-use std::{error, fmt};
+use std::io;
 
-#[derive(Debug, Clone)]
-pub struct WrongResponse {
-    message: String,
+use thiserror::{self, Error};
+
+use crate::{Command, OddResponse};
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("wrong response {1} for command {0}")]
+    WrongResponse(Command, OddResponse),
+    #[error("IO error")]
+    IOError(#[from] io::Error),
 }
-
-impl WrongResponse {
-    pub const fn new(message: String) -> Self {
-        Self { message }
-    }
-}
-
-impl fmt::Display for WrongResponse {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "WrongResponse: {}", self.message)
-    }
-}
-
-impl error::Error for WrongResponse {}
