@@ -1,16 +1,20 @@
-use std::fmt::Display;
+use derive_more::Display;
 
-#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Default)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Default, Display)]
 pub enum Command {
     #[default]
+    #[display(fmt = "Turn off")]
     TurnOff,
+    #[display(fmt = "Turn on")]
     TurnOn,
+    #[display(fmt = "Is enabled")]
     IsEnabled,
+    #[display(fmt = "Get current power usage")]
     GetCurrentPowerUsage,
+    #[display(fmt = "Get max power usage")]
     GetMaxPowerUsage,
-    Reserved {
-        command_id: u8,
-    },
+    #[display(fmt = "Reserved: [{command_id}]")]
+    Reserved { command_id: u8 },
 }
 
 impl From<u8> for Command {
@@ -35,23 +39,6 @@ impl From<Command> for u8 {
             Command::GetCurrentPowerUsage => 3,
             Command::GetMaxPowerUsage => 4,
             Command::Reserved { command_id } => command_id,
-        }
-    }
-}
-
-impl Display for Command {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::TurnOff => write!(f, "Turn off"),
-            Self::TurnOn => write!(f, "Turn on"),
-            Self::IsEnabled => write!(f, "Is enabled"),
-            Self::GetCurrentPowerUsage => write!(f, "Get current power usage"),
-            Self::GetMaxPowerUsage => write!(f, "Get max power usage"),
-            Self::Reserved { command_id } => {
-                write!(f, "Reserved :[")?;
-                command_id.fmt(f)?;
-                write!(f, "]")
-            }
         }
     }
 }
