@@ -22,7 +22,6 @@ members = [
     "crates/libs/measure_units",
     "crates/libs/smarthome",
     "crates/libs/tcp-plug-socket",
-    "crates/libs/tcp-plug-socket-async",
     "crates/libs/udp-thermometer",
 
     # -- Application Services
