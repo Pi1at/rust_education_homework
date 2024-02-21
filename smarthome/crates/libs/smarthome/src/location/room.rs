@@ -1,3 +1,5 @@
+use thiserror::{self};
+
 use super::{DeviceName, RoomName};
 
 // Помещение содержит названия нескольких устройств.
@@ -32,6 +34,7 @@ pub struct Room {
     name: RoomName,
     devices: Vec<DeviceName>,
 }
+
 impl Room {
     /// ignored, if device already in list
     #[must_use]
@@ -50,10 +53,16 @@ impl Room {
     }
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum RoomLocationError {
+    #[error("device already in list")]
+    DeviceAlreadyInList,
+}
+
 impl DeviceLocation for Room {
     type DeviceName = DeviceName;
     type LocationName = RoomName;
-    type Error = &'static str;
+    type Error = RoomLocationError;
     #[must_use]
     fn new(name: RoomName) -> Self {
         Self {
@@ -63,7 +72,7 @@ impl DeviceLocation for Room {
     }
     fn add_device(&mut self, device: DeviceName) -> Result<(), Self::Error> {
         if self.devices.contains(&device) {
-            Err("device already in list")
+            Err(RoomLocationError::DeviceAlreadyInList)
         } else {
             self.devices.push(device);
             Ok(())
