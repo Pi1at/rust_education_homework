@@ -16,7 +16,7 @@ fn test_name_is_saved_after_creation() {
 #[test]
 fn test_can_get_some_temp() {
     let tt = create_test_thermometer();
-    assert!(tt.get_temperature() != 0.);
+    assert!(tt.get_temperature() != 0.0.into());
 }
 
 #[test]
