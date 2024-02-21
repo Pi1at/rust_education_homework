@@ -74,7 +74,12 @@ impl TcpPlugOddSocket {
             OddResponse::Reserved(buf) if buf[0] == 42u8 => {
                 self.delimiter = u16::from_be_bytes(buf[1..].try_into().unwrap_or([0, 1])).into();
             }
-            _ => return Err(Error::WrongResponse(CALIBRATE_CMD, res)),
+            _ => {
+                return Err(Error::WrongResponse {
+                    cmd: CALIBRATE_CMD,
+                    resp: res,
+                })
+            }
         };
         Ok(self)
     }
