@@ -88,14 +88,8 @@ impl TcpPlugOddSocket {
         f32::from(power) / self.delimiter
     }
     fn update_state(&mut self, r: OddResponse) {
-        match r {
-            OddResponse::Power(power) => self.cached_pu = self.scale_power(power),
-            OddResponse::Ok
-            | OddResponse::Enabled
-            | OddResponse::Disabled
-            | OddResponse::Retry
-            | OddResponse::MaxPower(_)
-            | OddResponse::Reserved(_) => {}
+        if let OddResponse::Power(power) = r {
+            self.cached_pu = self.scale_power(power);
         }
     }
 
