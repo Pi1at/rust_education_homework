@@ -10,19 +10,26 @@ use smarthome::{
     },
     providers::DeviceInfoProvider,
 };
+use thiserror::Error;
 
 struct OwningDeviceInfoProvider {
     socket: SmartSocket,
 }
 
+#[derive(Debug, Error)]
+enum Error {
+    #[error("device not found")]
+    DeviceNotFound,
+}
 impl DeviceInfoProvider for OwningDeviceInfoProvider {
     type DeviceName = location::DeviceName;
     type RoomName = location::RoomName;
+    type Error = Error;
     fn get_device_state(
         &self,
         _room: &RoomName,
         device: &DeviceName,
-    ) -> Result<String, &'static str> {
+    ) -> Result<String, Self::Error> {
         if self.socket.name == *device {
             Ok(format!(
                 "{} power: {} W",
@@ -30,7 +37,7 @@ impl DeviceInfoProvider for OwningDeviceInfoProvider {
                 self.socket.get_current_power_usage()
             ))
         } else {
-            Err("Device not found")
+            Err(Error::DeviceNotFound)
         }
     }
 }
@@ -43,11 +50,12 @@ struct BorrowingDeviceInfoProvider<'a, 'b> {
 impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
     type DeviceName = location::DeviceName;
     type RoomName = location::RoomName;
+    type Error = Error;
     fn get_device_state(
         &self,
         _room: &RoomName,
         device: &DeviceName,
-    ) -> Result<String, &'static str> {
+    ) -> Result<String, Self::Error> {
         if self.socket.name == *device {
             Ok(format!(
                 "{} power: {} W",
@@ -57,7 +65,7 @@ impl<'a, 'b> DeviceInfoProvider for BorrowingDeviceInfoProvider<'a, 'b> {
         } else if self.thermo.name == *device {
             Ok(format!("{} {} °C", device, self.thermo.get_temperature()))
         } else {
-            Err("Device not found")
+            Err(Error::DeviceNotFound)
         }
     }
 }

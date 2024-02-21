@@ -130,11 +130,12 @@ fn test_create_report() {
     impl DeviceInfoProvider for MockDeviceInfoProvider {
         type DeviceName = location::DeviceName;
         type RoomName = location::RoomName;
+        type Error = &'static str;
         fn get_device_state(
             &self,
             room: &RoomName,
             device: &DeviceName,
-        ) -> Result<String, &'static str> {
+        ) -> Result<String, Self::Error> {
             if room == "Living Room" && device == self.device1.description() {
                 Ok("Device 1 is on".to_string())
             } else if room == "Bedroom" && device == &self.device2.name {

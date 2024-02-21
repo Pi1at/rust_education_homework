@@ -1,6 +1,7 @@
 pub trait DeviceInfoProvider {
     type DeviceName;
     type RoomName;
+    type Error;
     /// .
     ///
     /// # Errors
@@ -10,5 +11,5 @@ pub trait DeviceInfoProvider {
         &self,
         room: &Self::RoomName,
         device: &Self::DeviceName,
-    ) -> Result<String, &'static str>;
+    ) -> Result<String, Self::Error>;
 }
