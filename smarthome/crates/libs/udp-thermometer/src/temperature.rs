@@ -1,22 +1,9 @@
-use std::{
-    fmt::{self, Display, Formatter},
-    time::Instant,
-};
+use derive_more::Display;
+use derive_more::From;
+use std::time::Instant;
 
-#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, From, Display)]
 pub struct Temperature(f32);
-
-impl Display for Temperature {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl From<f32> for Temperature {
-    fn from(value: f32) -> Self {
-        Self(value)
-    }
-}
 
 impl Temperature {
     #[must_use]
