@@ -3,13 +3,14 @@ use std::time::Instant;
 use crate::temperature::Temperature;
 
 // t = ampl*sin(seconds*koeff) + mid
+// TODO: rename to better match meaning or change implementation
 pub struct Generator {
     started: Instant,
     ampl: f32,
     coeff: f32,
     mid: f32,
 }
-
+// TODO: Provide more generic implementation
 impl Iterator for Generator {
     type Item = Temperature;
 
