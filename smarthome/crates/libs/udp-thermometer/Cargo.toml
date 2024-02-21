@@ -8,6 +8,7 @@ version           = "0.1.0"
 
 [dependencies]
 derive_more = "0.99.17"
+measure_units = { path = "../../libs/measure_units" }
 smarthome = { path = "../../libs/smarthome" }
 thiserror.workspace = true
 tokio = { version = "1.36.0", features = [
