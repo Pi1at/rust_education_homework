@@ -32,9 +32,10 @@ impl SendCommand<Command> for TcpPlugOddSocket {
     type R = Result<Response>;
     #[must_use]
     fn send_command(&mut self, command: Command) -> Self::R {
-        let odd_resp = self.send_command(u8::from(command))?;
-        self.update_state(odd_resp);
-        Ok(self.convert_response(odd_resp))
+        self.send_command(u8::from(command)).map(|resp| {
+            self.update_state(resp);
+            self.convert_response(resp)
+        })
     }
 }
 
@@ -58,13 +59,12 @@ impl TcpPlugOddSocket {
     /// This function will return an error if connection or calibration fails
     pub fn new(plug_addr: impl ToSocketAddrs) -> Result<Self> {
         let stream = TcpStream::connect(plug_addr)?;
-        let calibrated = Self {
+        Self {
             stream,
             delimiter: 1.0,
             cached_pu: 0.0,
         }
-        .calibrate()?;
-        Ok(calibrated)
+        .calibrate()
     }
     fn calibrate(mut self) -> Result<Self> {
         const CALIBRATE_CMD: Command = Command::Reserved { command_id: 42 };

@@ -30,9 +30,10 @@ impl SendCommandAsync<Command> for TcpPlugOddSocket {
     type R = Result<Response>;
     #[must_use]
     async fn send_command(&mut self, command: Command) -> Self::R {
-        let odd_resp = self.send_command(u8::from(command)).await?;
-        self.update_state(odd_resp);
-        Ok(self.convert_response(odd_resp))
+        self.send_command(u8::from(command)).await.map(|resp| {
+            self.update_state(resp);
+            self.convert_response(resp)
+        })
     }
 }
 
@@ -56,14 +57,13 @@ impl TcpPlugOddSocket {
     /// This function will return an error if connection or calibration fails
     pub async fn new<T: ToSocketAddrs + Send>(plug_addr: T) -> Result<Self> {
         let stream = TcpStream::connect(plug_addr).await?;
-        let calibrated = Self {
+        Self {
             stream,
             delimiter: 1.0,
             cached_pu: 0.0,
         }
         .calibrate()
-        .await?;
-        Ok(calibrated)
+        .await
     }
     async fn calibrate(mut self) -> Result<Self> {
         const CALIBRATE_CMD: Command = Command::Reserved { command_id: 42 };
