@@ -1,11 +1,10 @@
+use anyhow::{anyhow, Result};
 use std::io;
 use std::time::Duration;
-
-use anyhow::anyhow;
-use anyhow::Result;
-use smarthome::devices::SendCommandAsync;
-use tcp_plug_socket_async::{Command, TcpPlugOddSocket};
 use tokio::time::sleep;
+
+use smarthome::devices::SendCommandAsync;
+use tcp_plug_socket::{impl_async::TcpPlugOddSocket, Command};
 
 #[tokio::main]
 async fn main() -> Result<()> {

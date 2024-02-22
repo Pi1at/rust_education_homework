@@ -8,6 +8,15 @@ version           = "0.1.0"
 
 [dependencies]
 anyhow = "1.0.79"
+derive_more = "0.99.17"
+thiserror = { workspace = true }
+tokio = { version = "1.36.0", features = [
+    "io-util",
+    "macros",
+    "net",
+    "rt-multi-thread",
+    "time",
+] }
 # -- App Libs
 smarthome = { path = "../../libs/smarthome" }
 

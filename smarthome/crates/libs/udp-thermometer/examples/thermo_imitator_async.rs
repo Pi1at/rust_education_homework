@@ -1,7 +1,7 @@
 use std::{net::SocketAddr, time::Duration};
 use tokio::{net::UdpSocket, time::sleep};
 
-use udp_thermometer::temperature::TemperatureGenerator;
+use measure_units::generator::Generator;
 
 #[tokio::main]
 async fn main() {
@@ -15,7 +15,7 @@ async fn main() {
     let socket = UdpSocket::bind(bind_addr).await.expect("can't bind socket");
 
     println!("Starting send temperature from {bind_addr} to {receiver}");
-    for temperature in TemperatureGenerator::default() {
+    for temperature in Generator::default() {
         let bytes = temperature.to_be_bytes();
         if let Err(err) = socket.send_to(&bytes, receiver).await {
             eprintln!("can't send temperature: {err}");

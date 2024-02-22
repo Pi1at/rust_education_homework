@@ -10,7 +10,6 @@ pub trait LocationSchema {
     type L;
     /// Represents the device name.
     type D;
-    //type DeviceName = DeviceLocation::DeviceName;
     #[must_use]
     fn new(name: String) -> Self;
 
@@ -18,6 +17,7 @@ pub trait LocationSchema {
 
     /// room with equal name will be replaced by new one
     fn add_room(&mut self, room: Self::R);
+
     /// delete room
     fn delete_room(&mut self, room: Self::R);
 

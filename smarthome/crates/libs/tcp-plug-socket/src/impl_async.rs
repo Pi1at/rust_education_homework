@@ -1,17 +1,10 @@
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpStream, ToSocketAddrs};
 
-pub use self::command::Command;
-pub use self::responses::{OddResponse, Response};
-use error::WrongResponse;
+use crate::{error::Error, Command, OddResponse, Response};
 use smarthome::devices::{Gauge, SendCommandAsync};
 
 type Result<T> = core::result::Result<T, Error>;
-type Error = Box<dyn std::error::Error>; // For early dev.
-
-mod command;
-mod error;
-mod responses;
 
 /// Odd TCP Smart Plug socket client- connects to smart plug via `TcpStream`
 /// let's pretend for some reason `HW` implementation can't handle floats
@@ -37,9 +30,10 @@ impl SendCommandAsync<Command> for TcpPlugOddSocket {
     type R = Result<Response>;
     #[must_use]
     async fn send_command(&mut self, command: Command) -> Self::R {
-        let odd_resp = self.send_command(u8::from(command)).await?;
-        self.update_state(odd_resp);
-        Ok(self.convert_response(odd_resp))
+        self.send_command(u8::from(command)).await.map(|resp| {
+            self.update_state(resp);
+            self.convert_response(resp)
+        })
     }
 }
 
@@ -63,23 +57,28 @@ impl TcpPlugOddSocket {
     /// This function will return an error if connection or calibration fails
     pub async fn new<T: ToSocketAddrs + Send>(plug_addr: T) -> Result<Self> {
         let stream = TcpStream::connect(plug_addr).await?;
-        let calibrated = Self {
+        Self {
             stream,
             delimiter: 1.0,
             cached_pu: 0.0,
         }
         .calibrate()
-        .await?;
-        Ok(calibrated)
+        .await
     }
     async fn calibrate(mut self) -> Result<Self> {
-        let raw: u8 = Command::Reserved { command_id: 42 }.into();
+        const CALIBRATE_CMD: Command = Command::Reserved { command_id: 42 };
+        let raw: u8 = CALIBRATE_CMD.into();
         let res = self.send_command(raw).await?;
         match res {
             OddResponse::Reserved(buf) if buf[0] == 42u8 => {
                 self.delimiter = u16::from_be_bytes(buf[1..].try_into().unwrap_or([0, 1])).into();
             }
-            _ => return Err(WrongResponse::new(format!("{res}")).into()),
+            _ => {
+                return Err(Error::WrongResponse {
+                    cmd: CALIBRATE_CMD,
+                    resp: res,
+                })
+            }
         };
         Ok(self)
     }
@@ -87,14 +86,8 @@ impl TcpPlugOddSocket {
         f32::from(power) / self.delimiter
     }
     fn update_state(&mut self, r: OddResponse) {
-        match r {
-            OddResponse::Power(power) => self.cached_pu = self.scale_power(power),
-            OddResponse::Ok
-            | OddResponse::Enabled
-            | OddResponse::Disabled
-            | OddResponse::Retry
-            | OddResponse::MaxPower(_)
-            | OddResponse::Reserved(_) => {}
+        if let OddResponse::Power(power) = r {
+            self.cached_pu = self.scale_power(power);
         }
     }
 

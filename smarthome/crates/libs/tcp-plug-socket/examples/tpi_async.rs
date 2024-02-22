@@ -1,6 +1,5 @@
 use std::sync::{Arc, Mutex};
-
-use tcp_plug_socket_async::{Command, OddResponse};
+use tcp_plug_socket::{Command, OddResponse};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::TcpListener,

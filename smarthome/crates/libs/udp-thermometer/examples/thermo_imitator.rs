@@ -4,7 +4,7 @@ use std::{
     time::Duration,
 };
 
-use udp_thermometer::temperature::TemperatureGenerator;
+use measure_units::generator::Generator;
 
 fn main() {
     let receiver = std::env::args()
@@ -17,7 +17,7 @@ fn main() {
     let socket = UdpSocket::bind(bind_addr).expect("can't bind socket");
 
     println!("Starting send temperature from {bind_addr} to {receiver}");
-    for temperature in TemperatureGenerator::default() {
+    for temperature in Generator::default() {
         let bytes = temperature.to_be_bytes();
         if let Err(err) = socket.send_to(&bytes, receiver) {
             eprintln!("can't send temperature: {err}");

@@ -1,14 +1,18 @@
-use std::fmt;
+use derive_more::Display;
 
-#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Default)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Default, Display)]
 pub enum OddResponse {
     #[default]
     Ok,
     Enabled,
     Disabled,
+    #[display(fmt = "Retry later")]
     Retry,
+    #[display(fmt = "Power: {_0}")]
     Power(u16),
+    #[display(fmt = "Max power: {_0}")]
     MaxPower(u16),
+    #[display(fmt = "Reserved {_0:?}")]
     Reserved([u8; 3]),
 }
 
@@ -61,40 +65,16 @@ impl From<&OddResponse> for [u8; 4] {
     }
 }
 
-impl fmt::Display for OddResponse {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Ok => write!(f, "Ok"),
-            Self::Enabled => write!(f, "Enabled"),
-            Self::Disabled => write!(f, "Disabled"),
-            Self::Power(power) => write!(f, "Power: {power}"),
-            Self::MaxPower(power) => write!(f, "Max power: {power}"),
-            Self::Reserved(v) => write!(f, "Reserved {v:?}"),
-            Self::Retry => write!(f, "Retry later"),
-        }
-    }
-}
-
-#[derive(Clone, Copy, PartialEq, PartialOrd, Debug, Default)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Debug, Default, Display)]
 pub enum Response {
     #[default]
     Ok,
     Enabled,
     Disabled,
+    #[display(fmt = "Power: {_0}")]
     Power(f32),
+    #[display(fmt = "Max power: {_0}")]
     MaxPower(f32),
+    #[display(fmt = "Reserved: {_0:?}")]
     Reserved([u8; 3]),
-}
-
-impl fmt::Display for Response {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Ok => write!(f, "Ok"),
-            Self::Enabled => write!(f, "Enabled"),
-            Self::Disabled => write!(f, "Disabled"),
-            Self::Power(power) => write!(f, "Power: {power}"),
-            Self::MaxPower(power) => write!(f, "Max power: {power}"),
-            Self::Reserved(v) => write!(f, "Reserved {v:?}"),
-        }
-    }
 }
