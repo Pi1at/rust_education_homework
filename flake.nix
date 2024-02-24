@@ -23,6 +23,7 @@
           cargo-generate
           cargo-llvm-cov
           cargo-watch
+          cargo-semver-checks
           rustToolchain
           pkg-config
         ];
