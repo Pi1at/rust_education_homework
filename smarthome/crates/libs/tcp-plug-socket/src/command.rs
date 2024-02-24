@@ -3,17 +3,17 @@ use derive_more::Display;
 #[derive(Clone, Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Default, Display)]
 pub enum Command {
     #[default]
-    #[display(fmt = "Turn off")]
+    #[display("Turn off")]
     TurnOff,
-    #[display(fmt = "Turn on")]
+    #[display("Turn on")]
     TurnOn,
-    #[display(fmt = "Is enabled")]
+    #[display("Is enabled")]
     IsEnabled,
-    #[display(fmt = "Get current power usage")]
+    #[display("Get current power usage")]
     GetCurrentPowerUsage,
-    #[display(fmt = "Get max power usage")]
+    #[display("Get max power usage")]
     GetMaxPowerUsage,
-    #[display(fmt = "Reserved: [{command_id}]")]
+    #[display("Reserved: [{command_id}]")]
     Reserved { command_id: u8 },
 }
 

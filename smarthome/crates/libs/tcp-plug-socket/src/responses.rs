@@ -6,13 +6,13 @@ pub enum OddResponse {
     Ok,
     Enabled,
     Disabled,
-    #[display(fmt = "Retry later")]
+    #[display("Retry later")]
     Retry,
-    #[display(fmt = "Power: {_0}")]
+    #[display("Power: {_0}")]
     Power(u16),
-    #[display(fmt = "Max power: {_0}")]
+    #[display("Max power: {_0}")]
     MaxPower(u16),
-    #[display(fmt = "Reserved {_0:?}")]
+    #[display("Reserved {_0:?}")]
     Reserved([u8; 3]),
 }
 
@@ -71,10 +71,10 @@ pub enum Response {
     Ok,
     Enabled,
     Disabled,
-    #[display(fmt = "Power: {_0}")]
+    #[display("Power: {_0}")]
     Power(f32),
-    #[display(fmt = "Max power: {_0}")]
+    #[display("Max power: {_0}")]
     MaxPower(f32),
-    #[display(fmt = "Reserved: {_0:?}")]
+    #[display("Reserved: {_0:?}")]
     Reserved([u8; 3]),
 }

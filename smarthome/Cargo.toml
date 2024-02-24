@@ -33,9 +33,14 @@ members = [
 resolver = "2"
 [workspace.package]
 license = "MIT"
-# NOTE: Only the crates that are utilized in two or more sub-crates and benefit from global management are handled in workspace.dependencies. Other strategies may also be valid.
+
 [workspace.dependencies]
-thiserror = { version = "1.0.57" }
+derive_more = {version = "^1.0.0-beta.6", features = ["display","from"]}
+thiserror = "^1.0.57"
+measure_units = { version = "*", path = "crates/libs/measure_units" }
+smarthome = { version = "*", path = "crates/libs/smarthome" }
+anyhow = "^1.0.80"
+tokio = "^1.36.0"
 # -- Serde
 #serde_with = {version = "3", features = ["time_0_3"] }
 # -- Data
