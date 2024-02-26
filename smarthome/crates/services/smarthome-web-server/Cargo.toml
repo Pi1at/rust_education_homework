@@ -17,8 +17,9 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tokio = { workspace = true, features = ["full"] }
 thiserror = { workspace = true }
-tower-http = { version = "0.5.2", features = ["cors"] }
-uuid = { version = "1.7.0", features = ["serde", "v4"] }
+tower = { version = "^0.4", features = ["util", "timeout"] }
+tower-http = { version = "^0.5.2", features = ["cors","add-extension", "trace"] }
+uuid = { version = "^1.7.0", features = ["serde", "v4"] }
 listenfd = "^1.0.1"
 rand="*"
 serde_yaml = "^0.9"

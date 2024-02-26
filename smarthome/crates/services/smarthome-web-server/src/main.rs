@@ -1,11 +1,17 @@
+use std::time::Duration;
+
+use listenfd::ListenFd;
+
 use axum::{
+    error_handling::HandleErrorLayer,
     http::StatusCode,
     response::{Html, IntoResponse},
     routing::get,
-    Router,
+    Json, Router,
 };
-use listenfd::ListenFd;
 use tokio::net::TcpListener;
+use tower::{BoxError, ServiceBuilder};
+use tower_http::trace::TraceLayer;
 
 #[tokio::main]
 async fn main() {
@@ -16,7 +22,24 @@ async fn main() {
 
     // build our application with a route
     let app = Router::new()
-        .route("/", get(handler).post(|| async { "Hello, World ✉️!" }))
+        .route("/", get(handler))
+        .route("/api/locations", get(get_locations))
+        .layer(
+            ServiceBuilder::new()
+                .layer(HandleErrorLayer::new(|error: BoxError| async move {
+                    if error.is::<tower::timeout::error::Elapsed>() {
+                        Ok(StatusCode::REQUEST_TIMEOUT)
+                    } else {
+                        Err((
+                            StatusCode::INTERNAL_SERVER_ERROR,
+                            format!("Unhandled internal error: {error}"),
+                        ))
+                    }
+                }))
+                .timeout(Duration::from_secs(10))
+                .layer(TraceLayer::new_for_http())
+                .into_inner(),
+        )
         // add a fallback service for handling routes to unknown paths
         .fallback(handler_404);
 
@@ -35,9 +58,13 @@ async fn main() {
 }
 
 async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
+    Html("<h1>Smarthome web server</h1>")
 }
 
 async fn handler_404() -> impl IntoResponse {
     (StatusCode::NOT_FOUND, "nothing to see here")
+}
+
+async fn get_locations() -> impl IntoResponse {
+    Json(vec!["Location 1", "Location 2"])
 }

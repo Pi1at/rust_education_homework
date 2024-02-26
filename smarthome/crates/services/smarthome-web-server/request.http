@@ -6,6 +6,9 @@ GET {{host}}/
 ###
 POST {{host}}/
 
+###
+GET {{host}}/api/locations
+
 # ###
 # GET {{host}}/ping
 
