@@ -29,3 +29,7 @@ tcp_plug:
   cargo run --package tcp-plug-socket --example tpi
 tcp_command_sender:
   cargo run --package tcp-plug-socket --example scs
+which_pid:
+  lsof -i TCP:3000
+watch-webserver:
+  systemfd --no-pid -s http::3000 -- cargo watch -w {{justfile_directory()}}/crates/services/smarthome-web-server/src --clear -x 'run --package smarthome-web-server'

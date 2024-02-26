@@ -25,7 +25,7 @@ members = [
     "crates/libs/udp-thermometer",
 
     # -- Application Services
-    #"crates/services/*",
+    "crates/services/*",
 
     # -- Tools
     #"crates/tools/*",
@@ -35,14 +35,10 @@ resolver = "2"
 license = "MIT"
 
 [workspace.dependencies]
-derive_more = {version = "^1.0.0-beta.6", features = ["display","from"]}
-thiserror = "^1.0.57"
-measure_units = { version = "*", path = "crates/libs/measure_units" }
 smarthome = { version = "*", path = "crates/libs/smarthome" }
-anyhow = "^1.0.80"
+measure_units = { version = "*", path = "crates/libs/measure_units" }
+
 tokio = "^1.36.0"
-# -- Serde
-#serde_with = {version = "3", features = ["time_0_3"] }
-# -- Data
-#modql = { version = "0.3.7", features = ["with-sea-query"]}
-#derive_more = {version = "1.0.0-beta", features = ["from", "display"] }
+thiserror = "^1.0.57"
+anyhow = "^1.0.80"
+derive_more = {version = "^1.0.0-beta", features = ["from", "display"] }

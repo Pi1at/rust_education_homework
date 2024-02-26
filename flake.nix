@@ -20,12 +20,17 @@
           pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
         nativeBuildInputs = with pkgs; [
           just
+          lsof
+          sqlx-cli
           cargo-generate
           cargo-llvm-cov
           cargo-watch
+          systemfd
           cargo-semver-checks
           rustToolchain
           pkg-config
+          libiconv
+          openssl
         ];
         buildInputs = with pkgs; [ ];
       in
