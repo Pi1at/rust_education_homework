@@ -1,4 +1,9 @@
-use axum::{response::Html, routing::get, Router};
+use axum::{
+    http::StatusCode,
+    response::{Html, IntoResponse},
+    routing::get,
+    Router,
+};
 use listenfd::ListenFd;
 use tokio::net::TcpListener;
 
@@ -10,7 +15,11 @@ async fn main() {
         .init();
 
     // build our application with a route
-    let app = Router::new().route("/", get(handler).post(|| async { "Hello, World ✉️!" }));
+    let app = Router::new()
+        .route("/", get(handler).post(|| async { "Hello, World ✉️!" }))
+        // add a fallback service for handling routes to unknown paths
+        .fallback(handler_404);
+
     // run it
     let listener = match ListenFd::from_env().take_tcp_listener(0).unwrap() {
         // if we are given a tcp listener on listen fd 0, we use that one
@@ -27,4 +36,8 @@ async fn main() {
 
 async fn handler() -> Html<&'static str> {
     Html("<h1>Hello, World!</h1>")
+}
+
+async fn handler_404() -> impl IntoResponse {
+    (StatusCode::NOT_FOUND, "nothing to see here")
 }
