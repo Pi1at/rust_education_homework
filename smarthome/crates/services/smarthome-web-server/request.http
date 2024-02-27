@@ -4,7 +4,7 @@
 GET {{host}}/
 
 ###
-POST {{host}}/
+GET {{host}}/health_check
 
 ###
 GET {{host}}/api/locations
