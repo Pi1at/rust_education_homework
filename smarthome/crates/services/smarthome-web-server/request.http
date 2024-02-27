@@ -9,6 +9,12 @@ POST {{host}}/
 ###
 GET {{host}}/api/locations
 
+###
+GET {{host}}/api/locations/House/rooms
+
+###
+GET {{host}}/api/locations/House/rooms/zzz
+
 # ###
 # GET {{host}}/ping
 
