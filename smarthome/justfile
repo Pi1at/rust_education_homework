@@ -33,3 +33,5 @@ which_pid:
   lsof -i TCP:3000
 watch-webserver:
   systemfd --no-pid -s http::3000 -- cargo watch -w {{justfile_directory()}}/crates/services/smarthome-web-server/src --clear -x 'run --package smarthome-web-server'
+postgres-run:
+  docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:latest

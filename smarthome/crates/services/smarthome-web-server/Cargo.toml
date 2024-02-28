@@ -23,5 +23,7 @@ uuid = { version = "^1.7.0", features = ["serde", "v4"] }
 listenfd = "^1.0.1"
 rand="*"
 serde_yaml = "^0.9"
+anyhow.workspace = true
+clap = { version = "4.5.1", features = ["derive","env"] }
 [lints]
 workspace = true
