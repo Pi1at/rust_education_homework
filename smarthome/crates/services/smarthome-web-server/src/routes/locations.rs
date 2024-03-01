@@ -8,7 +8,7 @@ pub fn location_route() -> Router {
         .route(
             "/:loc_id",
             get(location::read)
-                .post(location::update)
+                .put(location::update)
                 .delete(location::delete),
         )
         .route("/:loc_id/rooms", get(room::list).post(room::create))

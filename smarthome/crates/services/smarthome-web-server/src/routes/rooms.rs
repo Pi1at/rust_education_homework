@@ -6,7 +6,7 @@ pub fn room_route() -> Router {
     Router::new()
         .route(
             "/:room_id",
-            get(room::read).post(room::update).delete(room::delete),
+            get(room::read).put(room::update).delete(room::delete),
         )
         .route(
             "/:room_id/devices",

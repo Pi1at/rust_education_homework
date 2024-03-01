@@ -21,14 +21,14 @@ Content-Type: application/json
 }
 
 ### uuid from prev request
-@test_loc_uuid = 48dabe79-1200-4d2f-8522-85e38f33c3ba
+@test_loc_uuid = d210b03d-0a6a-4049-bf40-dc25bdc6af99
 
 ### /locations/:loc_id
 ### GET read location
 GET {{api}}/locations/{{test_loc_uuid}}
 
 ### POST update location
-POST {{api}}/locations/{{test_loc_uuid}}
+PUT {{api}}/locations/{{test_loc_uuid}}
 Content-Type: application/json
 
 {
@@ -57,7 +57,7 @@ Content-Type: application/json
 GET {{api}}/rooms/{{test_room_uuid}}
 
 ### POST update room
-POST {{api}}/rooms/{{test_room_uuid}}
+PUT {{api}}/rooms/{{test_room_uuid}}
 Content-Type: application/json
 
 {
@@ -86,7 +86,7 @@ Content-Type: application/json
 GET {{api}}/devices/{{test_device_uuid}}
 
 ### POST update :dev_id
-POST {{api}}/devices/{{test_device_uuid}}
+PUT {{api}}/devices/{{test_device_uuid}}
 Content-Type: application/json
 
 {
