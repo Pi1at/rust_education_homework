@@ -1,22 +1,19 @@
+use axum::{
+    error_handling::HandleErrorLayer, http::StatusCode, routing::get, BoxError, Extension, Router,
+};
+use sqlx::PgPool;
 use std::time::Duration;
-
-use axum::{error_handling::HandleErrorLayer, http::StatusCode, routing::get, BoxError, Router};
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
 
-use crate::logger;
+use crate::{handlers, routes};
 
-pub fn create() -> Router {
-    logger::setup();
+pub fn create(pool: PgPool) -> Router {
     Router::new()
-        .route("/", get(crate::routes::handler))
-        .route("/health_check", get(crate::routes::health_check))
-        .route("/api/locations", get(crate::routes::get_locations))
-        .route("/api/locations/:loc/rooms", get(crate::routes::get_rooms))
-        .route(
-            "/api/locations/:loc/rooms/:rid/devices",
-            get(crate::routes::get_devices),
-        )
+        .route("/", get(handlers::root))
+        .route("/health_check", get(handlers::health_check))
+        .nest("/api", routes::location_schema())
+        .layer(Extension(pool))
         .layer(
             ServiceBuilder::new()
                 .layer(HandleErrorLayer::new(|error: BoxError| async move {
@@ -34,5 +31,5 @@ pub fn create() -> Router {
                 .into_inner(),
         )
         // add a fallback service for handling routes to unknown paths
-        .fallback(crate::routes::handler_404)
+        .fallback(handlers::not_found_404)
 }

@@ -1,64 +1,97 @@
 @host = http://localhost:3000
 
-###
+### <h1>Smarthome web server</h1>
 GET {{host}}/
 
-###
+### 200 OK
 GET {{host}}/health_check
 
-###
-GET {{host}}/api/locations
+@api = {{host}}/api
 
-###
-GET {{host}}/api/locations/House/rooms
+### /locations
+### GET list all location
+GET {{api}}/locations
 
-###
-GET {{host}}/api/locations/House/rooms/zzz
+### POST create location
+POST {{api}}/locations
+Content-Type: application/json
 
-# ###
-# GET {{host}}/ping
+{
+    "name": "Some random loc"
+}
 
-# ###
-# GET {{host}}/kingkong/king
+### uuid from prev request
+@test_loc_uuid = 48dabe79-1200-4d2f-8522-85e38f33c3ba
 
-# ###
-# GET {{host}}/greet/rainer
+### /locations/:loc_id
+### GET read location
+GET {{api}}/locations/{{test_loc_uuid}}
 
-# ###
-# GET {{host}}/greet?salutation=Hi&name=rainer
+### POST update location
+POST {{api}}/locations/{{test_loc_uuid}}
+Content-Type: application/json
 
-# ###
-# GET {{host}}/greet?salutation=Hi
+{
+    "name": "Renamed location"
+}
 
-# ###
-# GET {{host}}/greet?name=rainer
+### DELETE delete location
+DELETE {{api}}/locations/{{test_loc_uuid}}
 
-# ###
-# GET {{host}}/greet
+### /locations/:loc_id/rooms
+### GET list all rooms for :loc_id
+GET {{api}}/locations/{{test_loc_uuid}}/rooms
 
-# ###
-# POST {{host}}/greet
-# Content-Type: application/json
+### POST create room for :loc_id
+POST {{api}}/locations/{{test_loc_uuid}}/rooms
+Content-Type: application/json
 
-# {
-#     "salutation": "Hi",
-#     "name": "rainer"
-# }
+{
+    "name": "Room 42"
+}
 
-# ###
-# GET {{host}}/lookup/1
+@test_room_uuid = 958741f0-4a1b-42b9-b81d-a2fdd2a5350e
 
-# ###
-# GET {{host}}/random
+### /rooms/:room_id
+### GET read room
+GET {{api}}/rooms/{{test_room_uuid}}
 
-# ###
-# GET {{host}}/numbers
+### POST update room
+POST {{api}}/rooms/{{test_room_uuid}}
+Content-Type: application/json
 
-# ###
-# POST {{host}}/numbers
-# Content-Type: application/json
+{
+    "name": "Room 33"
+}
 
-# 33
+### DELETE delete room
+DELETE {{api}}/rooms/{{test_room_uuid}}
 
-# ###
-# GET {{host}}/poem
+### /rooms/:room_id/devices
+### GET list all devices for :room_id
+GET {{api}}/rooms/{{test_room_uuid}}/devices
+
+### POST create device for :room_id
+POST {{api}}/rooms/{{test_room_uuid}}/devices
+Content-Type: application/json
+
+{
+    "name": "Device 13"
+}
+
+@test_device_uuid = 58a708be-8d6d-4992-adc2-ded466a5fb82
+
+### /devices/:dev_id
+### GET read :dev_id
+GET {{api}}/devices/{{test_device_uuid}}
+
+### POST update :dev_id
+POST {{api}}/devices/{{test_device_uuid}}
+Content-Type: application/json
+
+{
+    "name": "Device 33"
+}
+
+### DELETE delete
+DELETE {{api}}/devices/{{test_device_uuid}}
