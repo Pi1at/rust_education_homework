@@ -1,14 +1,14 @@
 
-# Smathome web-server example
+# Smarthome web-server example
 
 API for storing location information in DB
 
 ## Preparation
 
-create posgtres container:
+create postgres container:
 
 ```sh
-just postgress-run
+just postgres-run
 ```
 
 or
@@ -18,7 +18,7 @@ docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgre
 
 ```
 
-setup db using cargo-sqlx:
+setup db using the cargo-sqlx command:
 
 ```sh
 sqlx database setup
