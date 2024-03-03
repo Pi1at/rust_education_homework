@@ -1,3 +1,5 @@
+default:
+    @just --list
 build:
   cargo build
 lint:
@@ -35,3 +37,5 @@ watch-webserver:
   systemfd --no-pid -s http::3000 -- cargo watch -w {{justfile_directory()}}/crates/services/smarthome-web-server/src --clear -x 'run --package smarthome-web-server'
 postgres-run:
   docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:latest
+watch-gui:
+  dx serve --hot-reload --platform desktop
