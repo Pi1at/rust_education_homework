@@ -5,7 +5,7 @@ API for storing location information in DB
 
 ## Preparation
 
-create posgtres container:
+create postgres container:
 
 ```sh
 just postgres-run
