@@ -1,5 +1,5 @@
 
-# Smathome web-server example
+# Smarthome web-server example
 
 API for storing location information in DB
 
