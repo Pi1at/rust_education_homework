@@ -18,7 +18,7 @@ docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgre
 
 ```
 
-setup db using cargo-sqlx:
+setup db using the cargo-sqlx command:
 
 ```sh
 sqlx database setup
