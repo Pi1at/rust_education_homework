@@ -9,6 +9,6 @@ version           = "0.1.0"
 workspace = true
 
 [dependencies]
-measure_units = { path = "../../libs/measure_units" }
+measure_units = { workspace = true }
 
 thiserror.workspace = true

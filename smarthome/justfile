@@ -18,7 +18,20 @@ coverage:
   cargo llvm-cov --all-features --lcov --ignore-filename-regex tests --output-path coverage/lcov.info
 watch:
   cargo watch --clear --postpone -x 'clippy --lib' -x 'test --lib -- --show-output' -x 'run'
+[private]
+install-deps-inheritor:
+  cargo install cargo-dependency-inheritor
+deps-inheritor:
+  cargo dependency-inheritor -w "{{justfile_directory()}}/Cargo.toml" -n 2
+duplicates:
+  cargo tree -d
 tcp_plug:
   cargo run --package tcp-plug-socket --example tpi
 tcp_command_sender:
   cargo run --package tcp-plug-socket --example scs
+which_pid:
+  lsof -i TCP:3000
+watch-webserver:
+  systemfd --no-pid -s http::3000 -- cargo watch -w {{justfile_directory()}}/crates/services/smarthome-web-server/src --clear -x 'run --package smarthome-web-server'
+postgres-run:
+  docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:latest

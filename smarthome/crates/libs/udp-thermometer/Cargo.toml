@@ -7,17 +7,17 @@ version           = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-derive_more = "0.99.17"
-measure_units = { path = "../../libs/measure_units" }
-smarthome = { path = "../../libs/smarthome" }
+derive_more = { workspace = true }
+measure_units = { workspace = true }
+smarthome = { workspace = true }
 thiserror.workspace = true
-tokio = { version = "1.36.0", features = [
+tokio = { features = [
     "io-util",
     "macros",
     "net",
     "rt-multi-thread",
     "time",
-] }
+] , workspace = true }
 
 [dev-dependencies]
 anyhow = "1.0.80"
