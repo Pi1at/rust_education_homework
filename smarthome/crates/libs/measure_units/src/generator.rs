@@ -32,6 +32,16 @@ impl Default for Generator {
 
 impl Generator {
     #[must_use]
+    pub fn new(ampl: f32, coeff: f32, mid: f32) -> Self {
+        Self {
+            ampl,
+            coeff,
+            mid,
+            ..Default::default()
+        }
+    }
+
+    #[must_use]
     pub fn generate<T: From<f32>>(&self) -> T {
         T::from(self.ampl.mul_add(
             (self.started.elapsed().as_secs_f32() * self.coeff).sin(),
