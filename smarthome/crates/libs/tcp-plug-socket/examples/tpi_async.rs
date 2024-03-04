@@ -1,3 +1,4 @@
+use rand::Rng;
 use std::sync::{Arc, Mutex};
 use tcp_plug_socket::{Command, OddResponse};
 use tokio::{
@@ -64,7 +65,8 @@ impl SmartSocket {
             }
             Command::GetCurrentPowerUsage => {
                 if self.enabled {
-                    OddResponse::Power(12345)
+                    let pq = rand::thread_rng().gen_range(100..240 * 16 * 10);
+                    OddResponse::Power(pq)
                 } else {
                     OddResponse::Power(0)
                 }
