@@ -1,0 +1,32 @@
+[package]
+edition           = "2021"
+license.workspace = true
+name              = "tcp-plug-socket-gui"
+version           = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+eframe             = "^0.26.2"
+egui               = "^0.26.2"
+futures            = "^0.3.28"
+rand               = "^0.8.5"
+tracing-subscriber = "^0.3"
+
+anyhow.workspace = true
+egui_extras = { version = "^0.26.2", default_features = true, features = [
+    "image",
+] }
+smarthome = { workspace = true }
+tcp-plug-socket = { version = "*", path = "../../libs/tcp-plug-socket" }
+tokio = { workspace = true, features = [
+    "io-util",
+    "macros",
+    "net",
+    "rt-multi-thread",
+    "sync",
+    "time",
+] }
+tracing = "0.1"
+[lints]
+workspace = true
