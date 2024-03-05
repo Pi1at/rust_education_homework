@@ -38,7 +38,7 @@ async fn main() -> Result<()> {
     let mut odd_socket = test_socket.expect("no error expected there");
 
     let (command_sender, mut command_reciever) = mpsc::unbounded_channel::<Command>();
-    let (response_sender, response_reciever) = mpsc::unbounded_channel::<Response>();
+    let (response_sender, response_receiver) = mpsc::unbounded_channel::<Response>();
 
     // send command to the socket
     tokio::task::spawn(async move {
@@ -64,7 +64,7 @@ async fn main() -> Result<()> {
         }
     });
 
-    let app = TcpPlug::new(command_sender, response_reciever);
+    let app = TcpPlug::new(command_sender, response_receiver);
     let options = NativeOptions::default();
     eframe::run_native(
         "TCP Plug Socket",
