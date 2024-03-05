@@ -39,3 +39,5 @@ postgres-run:
   docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=password postgres:latest
 watch-gui:
   dx serve --hot-reload --platform desktop
+ffi:
+  cargo build && cargo run --package ffi-plug-socket --example ex1

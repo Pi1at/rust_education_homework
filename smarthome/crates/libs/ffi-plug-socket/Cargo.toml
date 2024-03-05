@@ -1,0 +1,17 @@
+[package]
+edition           = "2021"
+license.workspace = true
+name              = "ffi-plug-socket"
+version           = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+name       = "plug_socket"
+
+[dependencies]
+libloading = "^0.8.2"
+smarthome  = { workspace = true }
+[lints]
+workspace = true

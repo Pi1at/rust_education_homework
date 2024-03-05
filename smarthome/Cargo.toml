@@ -1,5 +1,5 @@
 [workspace]
-members = [
+members = [ "crates/libs/ffi-plug-socket",
     # -- Application Libraries
     "crates/libs/measure_units",
     "crates/libs/smarthome",
