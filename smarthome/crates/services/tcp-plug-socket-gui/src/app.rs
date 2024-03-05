@@ -20,7 +20,7 @@ impl From<PowerState> for Color32 {
 
 pub struct TcpPlug {
     command_sender: UnboundedSender<Command>,
-    response_reciever: UnboundedReceiver<Response>,
+    response_receiver: UnboundedReceiver<Response>,
     power: f32,
     state: PowerState,
 }
@@ -28,11 +28,11 @@ pub struct TcpPlug {
 impl TcpPlug {
     pub const fn new(
         sender: UnboundedSender<Command>,
-        reciever: UnboundedReceiver<Response>,
+        receiver: UnboundedReceiver<Response>,
     ) -> Self {
         Self {
             command_sender: sender,
-            response_reciever: reciever,
+            response_receiver: receiver,
             power: 0.0,
             state: PowerState::Disabled,
         }
@@ -45,7 +45,7 @@ impl eframe::App for TcpPlug {
             // repaint at most every 0.25s
             ctx.request_repaint_after(Duration::from_millis(16));
             // try to read all msgs and update state
-            while let Ok(resp) = self.response_reciever.try_recv() {
+            while let Ok(resp) = self.response_receiver.try_recv() {
                 match resp {
                     Response::Enabled => self.state = PowerState::Enabled,
                     Response::Disabled => self.state = PowerState::Disabled,
