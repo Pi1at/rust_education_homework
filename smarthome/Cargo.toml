@@ -1,3 +1,19 @@
+[workspace]
+members = [
+    # -- Application Libraries
+    "crates/libs/measure_units",
+    "crates/libs/smarthome",
+    "crates/libs/tcp-plug-socket",
+    "crates/libs/udp-thermometer",
+
+    # -- Application Services
+    "crates/services/*",
+
+    # -- Tools
+    #"crates/tools/*",
+]
+resolver = "2"
+
 [workspace.lints.rust]
 # unsafe_code = "forbid"
 # unused = "allow" # For experimental dev.
@@ -16,21 +32,6 @@ suspicious  = "warn"
 cast_possible_truncation    = "warn"
 empty_structs_with_brackets = "warn"
 
-[workspace]
-members = [
-    # -- Application Libraries
-    "crates/libs/measure_units",
-    "crates/libs/smarthome",
-    "crates/libs/tcp-plug-socket",
-    "crates/libs/udp-thermometer",
-
-    # -- Application Services
-    "crates/services/*",
-
-    # -- Tools
-    #"crates/tools/*",
-]
-resolver = "2"
 [workspace.package]
 license = "MIT"
 

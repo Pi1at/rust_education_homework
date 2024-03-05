@@ -7,8 +7,13 @@ version           = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# -- App Libs
+derive_more   = { workspace = true }
+measure_units = { workspace = true }
+smarthome     = { workspace = true }
+
 anyhow = { workspace = true }
-derive_more = { workspace = true }
+rand = "*"
 thiserror = { workspace = true }
 tokio = { features = [
     "io-util",
@@ -16,9 +21,7 @@ tokio = { features = [
     "net",
     "rt-multi-thread",
     "time",
-] , workspace = true }
-# -- App Libs
-smarthome = { workspace = true }
+], workspace = true }
 
 [lints]
 workspace = true
