@@ -16,4 +16,4 @@
 - [x] Rust паттерны [link](./homework%20tasks/12%20-%20Rust%20паттерны.md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-12/patterns_rust)
 - [x] Веб-сервер "умного дома" [link](./homework%20tasks/13%20-%20Веб-сервер%20"умного%20дома".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-13/smarthome)
 - [x] Графический интерфейс "Умной розетки" [link](./homework%20tasks/14%20-%20Графический%20интерфейс%20"Умной%20розетки".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-14/smarthome)
-- [ ] Динамическая библиотека "Умная розетка" [link](./homework%20tasks/15%20-%20Динамическая%20библиотека%20"Умная%20розетка".md)
+- [x] Динамическая библиотека "Умная розетка" [link](./homework%20tasks/15%20-%20Динамическая%20библиотека%20"Умная%20розетка".md) [code](https://github.com/Pi1at/rust_education_homework/tree/task-15/smarthome/crates/libs/ffi-plug-socket)
